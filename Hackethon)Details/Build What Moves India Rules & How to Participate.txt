@@ -1,0 +1,1129 @@
+00:00 So ladies and gentlemen, I want to make
+00:01 
+
+00:01 a quick video on rules, regulations,
+00:03 
+
+00:03 expectations on Buildwood Moves India.
+00:06 
+
+00:06 So we already have over 5,000 entries
+00:09 
+
+00:09 and we genuinely didn't expect that. I
+00:11 
+
+00:11 was holding off on sending instructions
+00:12 
+
+00:12 until the application slowed down, but
+00:14 
+
+00:14 I'm super excited to finally kick this
+00:16 
+
+00:16 off. So in this video, we'll give you
+00:18 
+
+00:18 the exact instructions with every detail
+00:20 
+
+00:20 on what to build and how to submit. So I
+00:23 
+
+00:23 have a list here. I'm just going to run
+00:25 
+
+00:25 you through everything and I hope we
+00:26 
+
+00:26 cover everything through this. So let's
+00:28 
+
+00:28 start with what to build. You can pick
+00:30 
+
+00:30 one of the 10 public service platforms
+00:32 
+
+00:32 on the screen. Now, if there's a
+00:34 
+
+00:34 specific government website you're
+00:36 
+
+00:36 really frustrated with that's outside of
+00:37 
+
+00:37 this and you submit that, that's also
+00:40 
+
+00:40 okay. But your chances are a little bit
+00:42 
+
+00:42 lower because if the team here who's
+00:44 
+
+00:44 evaluating these projects, uh if we've
+00:46 
+
+00:46 not had experience using that government
+00:48 
+
+00:48 platform, then we might not understand
+00:50 
+
+00:50 your solution as easily as the rest.
+00:52 
+
+00:52 We're used to the rest. We know how they
+00:53 
+
+00:53 work. Uh which is why I recommend uh
+00:55 
+
+00:55 working with these 10. But remember, if
+00:57 
+
+00:57 you make something exceptional, we'll
+00:58 
+
+00:58 see. The second thing is we're expecting
+01:00 
+
+01:00 a comprehensive proof of concept, which
+01:03 
+
+01:03 means you rebuild it entirely. Mock the
+01:05 
+
+01:05 data, the back end, and the accounts.
+01:07 
+
+01:07 So, it's all mock backend data and
+01:09 
+
+01:09 accounts. Charge GBD has something today
+01:11 
+
+01:11 called sites. So, even hosting is kind
+01:13 
+
+01:13 of taken care of. We're not expecting
+01:14 
+
+01:14 this to get crazy scale. This is just
+01:16 
+
+01:16 for us to use. And that brings me to my
+01:18 
+
+01:18 next step, which is provide login
+01:19 
+
+01:19 credentials. So, we can actually get in
+01:21 
+
+01:21 and test it. We only want to see it from
+01:23 
+
+01:23 the consumer side, how end users like
+01:25 
+
+01:25 you and me will use it. and not from the
+01:27 
+
+01:27 admin side. The grading here is going to
+01:29 
+
+01:29 be as a citizen using it. We assume you
+01:31 
+
+01:31 built the admin side well. We aren't
+01:32 
+
+01:32 really looking at it because anyway
+01:34 
+
+01:34 during implementation, you'll need to
+01:36 
+
+01:36 understand how it's currently
+01:37 
+
+01:37 implemented. Next, focus on ideas over
+01:40 
+
+01:40 code. Look, you can vibe code anything
+01:42 
+
+01:42 today. And I think today what public
+01:43 
+
+01:43 service websites in India need is new
+01:45 
+
+01:45 ideas. So today, remember that the
+01:48 
+
+01:48 crazier ideas are harder to come by. The
+01:50 
+
+01:50 actual implementation really depends on
+01:52 
+
+01:52 how the public service website is
+01:54 
+
+01:54 implemented. We'll do that later. if
+01:55 
+
+01:55 your projects are selected. But right
+01:57 
+
+01:57 now, put your energy into the
+01:58 
+
+01:58 interfaces, interactions, try to build
+02:01 
+
+02:01 something easier, something new, uh if
+02:03 
+
+02:03 you want to add in a map, you want to
+02:04 
+
+02:04 add in a tax calculator, you want to
+02:06 
+
+02:06 make it chatbot driven, just build out
+02:08 
+
+02:08 your best ideas. Uh the more unique the
+02:11 
+
+02:11 idea but still useful to the end
+02:13 
+
+02:13 consumer, the better it is. So you could
+02:15 
+
+02:15 make a platform that has all the bells
+02:17 
+
+02:17 and whistles, has crazy 3D 3JS content
+02:19 
+
+02:19 going on, but that might not actually be
+02:21 
+
+02:21 very valuable for the end consumers. So
+02:24 
+
+02:24 really think from the end consumers who
+02:26 
+
+02:26 are busy, they're frustrated with these
+02:27 
+
+02:27 platforms. They don't have too much time
+02:29 
+
+02:29 and they want a solution quickly. Next,
+02:31 
+
+02:31 keep it small. Okay? Uh you can either
+02:34 
+
+02:34 go solo or bring in a partner. You can
+02:36 
+
+02:36 bring in a maximum of two people. The
+02:39 
+
+02:39 next is to get your teammates
+02:40 
+
+02:40 registered. Your partner must also be
+02:42 
+
+02:42 registered uh in the form that we put
+02:44 
+
+02:44 out to compete. Send them the link
+02:45 
+
+02:45 today. The next thing is the email rule.
+02:47 
+
+02:47 And this is very critical. Your email is
+02:49 
+
+02:49 your ID. The email you registered with
+02:51 
+
+02:51 is your identity for every form, result,
+02:54 
+
+02:54 and invite. And there are no exceptions
+02:56 
+
+02:56 to this. If you use a different email,
+02:58 
+
+02:58 lose access to it, or your partner
+02:59 
+
+02:59 submits an unregistered ID.
+03:01 
+
+03:01 Unfortunately, with the scale of results
+03:03 
+
+03:03 that we're getting in, we can't really
+03:04 
+
+03:04 help you because remember that at the
+03:06 
+
+03:06 end of the day, I'm a content creator.
+03:07 
+
+03:07 Yes, we run a business and all those
+03:08 
+
+03:08 people have work to do. This is run
+03:09 
+
+03:09 mostly by the VM content team and we
+03:12 
+
+03:12 have a limited team. So, if you lose
+03:13 
+
+03:13 access to your account, it'll be very
+03:15 
+
+03:15 hard for us to search. So, let me tell
+03:16 
+
+03:16 you how the system will work. We have
+03:18 
+
+03:18 5,000 people who have already applied.
+03:20 
+
+03:20 We might have many more. And we'll match
+03:23 
+
+03:23 everything up by email. Now, let's go
+03:25 
+
+03:25 into the submission process. The
+03:26 
+
+03:26 deadline for round one closes exactly on
+03:30 
+
+03:30 August 28th at 8:00 p.m. IST. So, form
+03:35 
+
+03:35 goes to your registered emails. So, you
+03:38 
+
+03:38 have 7 days to build. Now remember that
+03:40 
+
+03:40 you can still register for this even 3
+03:42 
+
+03:42 or 4 days later but you have a shorter
+03:44 
+
+03:44 period of time to then build because
+03:46 
+
+03:46 28th is when your final submissions need
+03:49 
+
+03:49 to go on that Google form. Now I'll tell
+03:51 
+
+03:51 you how you actually submit. You do four
+03:53 
+
+03:53 things. Number one, you provide a link.
+03:55 
+
+03:55 So you provide a live public link. It
+03:58 
+
+03:58 could be your chat GPD website. You want
+03:60 
+
+03:60 to host it on Versel. You can do it
+04:01 
+
+04:01 wherever you want. If it doesn't open on
+04:03 
+
+04:03 a browser though, it doesn't exist. So
+04:05 
+
+04:05 we're not actually going to download and
+04:06 
+
+04:06 use mobile apps. It has to exist on a
+04:08 
+
+04:08 browser. The next thing we need is
+04:09 
+
+04:09 either a Loom or an OBS or a
+04:11 
+
+04:11 self-recorded video from you explaining
+04:14 
+
+04:14 how you built the project and what it
+04:15 
+
+04:15 is. This is broken down into 2 minutes.
+04:17 
+
+04:17 2 minutes is your maximum time. The
+04:19 
+
+04:19 first minute is you using the project as
+04:21 
+
+04:21 a citizen and showcasing it. The second
+04:23 
+
+04:23 minute is explaining how you built it,
+04:25 
+
+04:25 right? So, what is the decision you
+04:26 
+
+04:26 took? Why did you do it a certain way?
+04:28 
+
+04:28 This is for us to make sure that you had
+04:29 
+
+04:29 some input in building it. You can do
+04:31 
+
+04:31 this with your teammate. So, it's even
+04:32 
+
+04:32 cooler if both of you get together and
+04:34 
+
+04:34 make a video. It's good practice as well
+04:35 
+
+04:35 to start making videos, especially in
+04:37 
+
+04:37 2026. The third thing we need from you
+04:39 
+
+04:39 is a text summary. Give us exactly 250
+04:43 
+
+04:43 words what it is and why it's better
+04:45 
+
+04:45 than the current solution. The last
+04:46 
+
+04:46 thing we need from you is an email ID.
+04:49 
+
+04:49 Okay, this email ID is not your email ID
+04:51 
+
+04:51 because we already have that when you
+04:53 
+
+04:53 submit the form, but the email ID of
+04:55 
+
+04:55 your partner and at the same time your
+04:57 
+
+04:57 partner has to put in your email ID.
+04:59 
+
+04:59 This is the only way we can make sure
+05:01 
+
+05:01 that you work together as a team. If you
+05:03 
+
+05:03 have no partner, you can leave this
+05:05 
+
+05:05 blank. But remember, without both
+05:07 
+
+05:07 partners putting each other's email ids,
+05:10 
+
+05:10 there's a lot of potential for people to
+05:11 
+
+05:11 gain the system, and we don't want to do
+05:13 
+
+05:13 that. On August 28th, submissions close.
+05:16 
+
+05:16 Now, I know you could be 10 minutes late
+05:18 
+
+05:18 or 20 minutes late, and and you know,
+05:19 
+
+05:19 life always keeps us busy, but
+05:21 
+
+05:21 unfortunately, we have to keep it fair
+05:23 
+
+05:23 for everybody at this scale. We have to
+05:25 
+
+05:25 have a deadline, and that deadline is
+05:27 
+
+05:27 going to be what is stated on the screen
+05:29 
+
+05:29 right now. So between 28th of August and
+05:32 
+
+05:32 1st of September, both my team and I as
+05:35 
+
+05:35 well as the OpenAI team, I've asked them
+05:37 
+
+05:37 for their help in India. Both these
+05:38 
+
+05:38 teams are going to work together to go
+05:40 
+
+05:40 through the submissions. Even with some
+05:42 
+
+05:42 of you going in this with a team
+05:44 
+
+05:44 mindset, the maximum number of projects
+05:45 
+
+05:45 we're going to cut this down into is
+05:47 
+
+05:47 250. Now remember that at the end of the
+05:49 
+
+05:49 day, you're being judged by a bunch of
+05:50 
+
+05:50 people that are looking through a lot of
+05:52 
+
+05:52 submissions. So remember that I might
+05:54 
+
+05:54 end up making mistakes, my team might
+05:56 
+
+05:56 end up making mistakes. uh there might
+05:58 
+
+05:58 be one or two good projects that we
+05:60 
+
+05:60 miss. Statistically, at the scale we're
+06:01 
+
+06:01 at, it's very likely. Uh so don't feel
+06:04 
+
+06:04 bad if you don't end up making it. It is
+06:07 
+
+06:07 not your fault. It's not because you
+06:09 
+
+06:09 might not have engineered a great
+06:10 
+
+06:10 solution. Uh we unfortunately can't sit
+06:12 
+
+06:12 down and write a reason for every single
+06:14 
+
+06:14 submission just because of the number of
+06:15 
+
+06:15 submissions we're getting. But at the
+06:17 
+
+06:17 end of the day, we're trying our best. U
+06:20 
+
+06:20 we're giving benefit of the doubt. We
+06:21 
+
+06:21 understand that when you're making a P,
+06:23 
+
+06:23 some things might be slightly off. We
+06:25 
+
+06:25 understand all those things. So we are
+06:27 
+
+06:27 judging relative to the other
+06:29 
+
+06:29 submissions that are coming in and we're
+06:30 
+
+06:30 going to take the top 251s that we like
+06:33 
+
+06:33 and everyone will have their different
+06:34 
+
+06:34 tastes in the team. I know that when we
+06:36 
+
+06:36 get rejected we can get a little bit
+06:37 
+
+06:37 angry, a little bit you know you know
+06:39 
+
+06:39 this was unfair or that was this.
+06:41 
+
+06:41 Remember a lot of the time humans make
+06:43 
+
+06:43 mistakes at this scale there are going
+06:45 
+
+06:45 to be errors we make but at the end of
+06:47 
+
+06:47 the day this is for a good cause. So
+06:48 
+
+06:48 even if you lose know that in my mind
+06:51 
+
+06:51 you are a winner for even trying. But
+06:53 
+
+06:53 everybody will get an email and you will
+06:55 
+
+06:55 know in that email whether you made it
+06:57 
+
+06:57 or not. The next piece is the fun piece.
+06:59 
+
+06:59 It's the mentorship. The 250 final
+07:01 
+
+07:01 entrance get one week in a WhatsApp
+07:05 
+
+07:05 group with five different mentors to
+07:07 
+
+07:07 tighten the project. So I've actually
+07:09 
+
+07:09 gone to my friends who I know have been
+07:11 
+
+07:11 engineers for tens of years. People who
+07:13 
+
+07:13 worked at really really large companies
+07:15 
+
+07:15 mentors from tech Twitter credible
+07:17 
+
+07:17 developers and some people even from the
+07:19 
+
+07:19 OpenAI team. Right? So if you don't have
+07:21 
+
+07:21 relationships with uh people in big
+07:23 
+
+07:23 technology in India, this mentorship
+07:25 
+
+07:25 will actually be really valuable for you
+07:27 
+
+07:27 because you'll see how they think,
+07:28 
+
+07:28 right? Even if you don't end up winning,
+07:30 
+
+07:30 you'll still see how they think. This
+07:31 
+
+07:31 mentorship will be very valuable for
+07:33 
+
+07:33 you. Now, they've agreed to do this for
+07:34 
+
+07:34 free. So there might be instances where
+07:37 
+
+07:37 they might just have an insane amount of
+07:38 
+
+07:38 work on some specific day and they might
+07:40 
+
+07:40 not be able to help. So remember that I
+07:42 
+
+07:42 can't physically hound them and tell
+07:43 
+
+07:43 them, hey, you know, you have to help
+07:44 
+
+07:44 these mentees, you know, 12 hours a day
+07:46 
+
+07:46 or 15 hours a day. I can't do that. But
+07:48 
+
+07:48 at the end of the day, they're coming
+07:49 
+
+07:49 out of their own goodwill. They're
+07:51 
+
+07:51 coming out of their own vition. So yeah,
+07:54 
+
+07:54 I think they're coming in with the right
+07:55 
+
+07:55 intentions. And the idea is to help you
+07:57 
+
+07:57 shape a better solution. So you have one
+07:60 
+
+07:60 week to actually improve on your
+08:02 
+
+08:02 solution. So we actually understand that
+08:04 
+
+08:04 in the first week, the first submission
+08:06 
+
+08:06 that you put in is going to be a little
+08:07 
+
+08:07 rough, but you have another week with a
+08:09 
+
+08:09 little bit of mentorship where you can
+08:10 
+
+08:10 improve on your solution because
+08:12 
+
+08:12 remember, we're going to be demoing this
+08:13 
+
+08:13 and lots of people are going to see it.
+08:15 
+
+08:15 So we want to make sure it's as good as
+08:17 
+
+08:17 it can be. The deadline for this is
+08:19 
+
+08:19 September 7th. This is the round two
+08:21 
+
+08:21 submission. It's the same format. You
+08:22 
+
+08:22 just put in an updated project. And
+08:24 
+
+08:24 remember, you have to use the same email
+08:27 
+
+08:27 ID that you used in the past. Your
+08:29 
+
+08:29 teammate has to use the same email ID
+08:31 
+
+08:31 that they used in the past. There is no
+08:33 
+
+08:33 way for us to verify otherwise. If you
+08:35 
+
+08:35 use a new email ID, we're just going to
+08:36 
+
+08:36 think it's some different entrant and
+08:38 
+
+08:38 not let them in. So, we're going to
+08:40 
+
+08:40 match the two and only take on those
+08:42 
+
+08:42 projects. So this is why it's important
+08:44 
+
+08:44 you use the same consistent email across
+08:46 
+
+08:46 both you as well as your partner if you
+08:48 
+
+08:48 have a partner. So between September 8th
+08:51 
+
+08:51 and 12th, we're going to announce the
+08:52 
+
+08:52 top 10. So after that period, we're then
+08:55 
+
+08:55 going to announce the top 10. And
+08:57 
+
+08:57 remember that uh if you made it to the
+08:59 
+
+08:59 top 10, you're because of the number of
+09:01 
+
+09:01 submissions, you're in the top 0.0
+09:03 
+
+09:03 something. So it's like really the cream
+09:05 
+
+09:05 of the crop. And if you do get rejected
+09:07 
+
+09:07 and don't make it, remember that you're
+09:09 
+
+09:09 really competing with some of the best
+09:10 
+
+09:10 projects out there. And at the same
+09:11 
+
+09:11 time, mentors and judges make mistakes.
+09:13 
+
+09:13 It's very human to do, but it's crazy
+09:15 
+
+09:15 that you even got in the top 250. It's a
+09:17 
+
+09:17 big achievement. And we'll have a page
+09:18 
+
+09:18 where your name is out there, right? So,
+09:20 
+
+09:20 if any tech companies in India are
+09:21 
+
+09:21 looking to hire talent, you'll
+09:22 
+
+09:22 definitely be on that page and they'll
+09:24 
+
+09:24 definitely look at you and your project.
+09:26 
+
+09:26 So, you actually have a proof of work
+09:27 
+
+09:27 and we'll have a page honoring the top
+09:29 
+
+09:29 250. But if you're in the top 10,
+09:31 
+
+09:31 congratulations. You're literally in the
+09:33 
+
+09:33 absolute top and you get to come on
+09:36 
+
+09:36 September 12th and present live in
+09:38 
+
+09:38 Bangalore to founders, creators, the
+09:41 
+
+09:41 mentors that you've been working with
+09:43 
+
+09:43 and some of the government officials
+09:44 
+
+09:44 we've been speaking to. Now, this is not
+09:46 
+
+09:46 going to be a live streamed event. It's
+09:47 
+
+09:47 actually going to be a recorded event
+09:48 
+
+09:48 and we put out the video in a while and
+09:50 
+
+09:50 we will announce the winners the same
+09:51 
+
+09:51 day both in location as well as online.
+09:54 
+
+09:54 So, let me quickly get to the prizes.
+09:57 
+
+09:57 The top 10, whoever makes it to the top
+09:58 
+
+09:58 10 gets a year of Codex Pro and also a
+10:01 
+
+10:01 Codeex Micro. The top three get a
+10:04 
+
+10:04 MacBook along with everything else that
+10:07 
+
+10:07 we spoke about. And the top one will get
+10:10 
+
+10:10 a trip to San Francisco subject to you
+10:12 
+
+10:12 of course getting a visa. Uh, you know,
+10:14 
+
+10:14 as a content creator, I can't really
+10:15 
+
+10:15 control whether you get a visa or not,
+10:17 
+
+10:17 but we'll try our best. Now, I just want
+10:19 
+
+10:19 to quickly repeat the thing that I've
+10:21 
+
+10:21 said multiple times throughout this
+10:22 
+
+10:22 video, which is on rejection. I remember
+10:24 
+
+10:24 I went to a hackathon when I was 20 or
+10:25 
+
+10:25 21 and I got rejected and I was super
+10:28 
+
+10:28 bitter about it, right? But I just
+10:30 
+
+10:30 didn't understand the math. And in this
+10:32 
+
+10:32 case, the math is pretty harsh. It's at
+10:34 
+
+10:34 minimum 5,000 people who've already
+10:36 
+
+10:36 applied and only 10 get on stage. The
+10:38 
+
+10:38 likely outcome is that you won't get
+10:39 
+
+10:39 picked, but getting in the top 250 is
+10:41 
+
+10:41 not impossible. You still have odds to
+10:43 
+
+10:43 get there and the mentorship will be
+10:45 
+
+10:45 very useful. Uh the network that you end
+10:47 
+
+10:47 up building off that will be very useful
+10:49 
+
+10:49 and at the end of the day, some of your
+10:50 
+
+10:50 ideas, the government might even see
+10:52 
+
+10:52 some of those ideas. We might handp pick
+10:53 
+
+10:53 some of those ideas, keep it separately
+10:55 
+
+10:55 and get them to look at it. Now, I also
+10:56 
+
+10:56 want to tell you what the goal with this
+10:57 
+
+10:57 event is. Remember that all these things
+10:59 
+
+10:59 like the trip to San Francisco or the
+11:01 
+
+11:01 Codex Micros or the MacBook, these are
+11:03 
+
+11:03 all incentives to get you to
+11:05 
+
+11:05 participate. At the end of the day, the
+11:07 
+
+11:07 goal is to create real dialogue between
+11:10 
+
+11:10 the tech ecosystem in India, the content
+11:12 
+
+11:12 ecosystem in India and government
+11:14 
+
+11:14 bodies. And they're more open than ever.
+11:16 
+
+11:16 We have some soft confirmations already.
+11:18 
+
+11:18 And imagine what a service you're doing
+11:19 
+
+11:19 to your fellow citizen which is all your
+11:21 
+
+11:21 ideas, all your creativity. Uh you're
+11:23 
+
+11:23 giving the government clear PC's where
+11:25 
+
+11:25 they can look at something and decide
+11:26 
+
+11:26 whether that should be in the platform
+11:28 
+
+11:28 or not. Now we can't promise you that
+11:30 
+
+11:30 the public service websites will
+11:31 
+
+11:31 absolutely take all of these features
+11:32 
+
+11:32 and put it on their platforms. Uh these
+11:34 
+
+11:34 are legacy code bases. They may take
+11:36 
+
+11:36 time. They might have dialogue with you.
+11:38 
+
+11:38 They might get you involved part-time or
+11:40 
+
+11:40 full-time. Uh these things may happen,
+11:42 
+
+11:42 but there are no guarantees here because
+11:44 
+
+11:44 ultimately we're dealing with millions
+11:46 
+
+11:46 and millions of people. But after AI,
+11:48 
+
+11:48 the ideas have become more important
+11:50 
+
+11:50 than the implementation. And the ideas
+11:52 
+
+11:52 here are the most valuable thing.
+11:54 
+
+11:54 Anyway, that's it for me. I'm super
+11:57 
+
+11:57 duper duper excited to see some of you
+11:59 
+
+11:59 build cool solutions. And yeah, I can't
+12:01 
+
+12:01 wait to see how the next 14 days goes
+12:03 
+
+12:03 ahead.
