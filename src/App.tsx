@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { estimatedNpsImpact, money, tdsDifference } from "./lib/tax";
+import taxCheckIllustration from "./assets/tax-check-illustration.svg";
 
 type Stage =
   | "home"
@@ -11,6 +12,7 @@ type Stage =
   | "readiness";
 type ScenarioId = "priya" | "arjun" | "meera";
 type Theme = "light" | "dark" | "system";
+type TaxRegime = "new" | "old";
 
 type Scenario = {
   id: ScenarioId;
@@ -28,6 +30,22 @@ type TaxHistoryEntry = {
   year: string;
   paid: number;
   status: string;
+};
+
+type DocumentOption = {
+  icon: string;
+  title: string;
+  detail: string;
+  source: string;
+  checks: string[];
+  supported: boolean;
+};
+
+type SavingCheck = {
+  icon: string;
+  title: string;
+  detail: string;
+  checklist: string;
 };
 
 const scenarios: Record<ScenarioId, Scenario> = {
@@ -84,6 +102,88 @@ const taxPaidHistory: Record<ScenarioId, TaxHistoryEntry[]> = {
   ],
 };
 
+const documentOptions: DocumentOption[] = [
+  {
+    icon: "▤",
+    title: "Form 16",
+    detail: "Best place to start",
+    source: "Employer-issued tax certificate",
+    checks: ["Salary income", "TDS deducted", "Employer details"],
+    supported: true,
+  },
+  {
+    icon: "◫",
+    title: "AIS",
+    detail: "Your reported income",
+    source: "Annual Information Statement",
+    checks: ["Interest income", "Dividends", "Reported TDS"],
+    supported: false,
+  },
+  {
+    icon: "✓",
+    title: "26AS",
+    detail: "Your TDS records",
+    source: "Tax credit statement",
+    checks: ["TDS credits", "Advance tax", "Self-assessment tax"],
+    supported: false,
+  },
+  {
+    icon: "▱",
+    title: "Investment proof",
+    detail: "Savings & deductions",
+    source: "Investment and insurance records",
+    checks: ["Section 80C", "Health insurance", "NPS contributions"],
+    supported: false,
+  },
+  {
+    icon: "⌂",
+    title: "Home-loan certificate",
+    detail: "Interest & principal",
+    source: "Lender-issued annual certificate",
+    checks: ["Interest paid", "Principal repayment", "Property details"],
+    supported: false,
+  },
+  {
+    icon: "⋯",
+    title: "Other document",
+    detail: "Salary slip, bank statement…",
+    source: "Supporting tax document",
+    checks: ["Income item", "Potential deduction", "Supporting evidence"],
+    supported: false,
+  },
+];
+
+const oldRegimeSavingChecks: SavingCheck[] = [
+  {
+    icon: "▱",
+    title: "Section 80C investments",
+    detail: "Investments and principal repayment — up to ₹1.5 lakh limit",
+    checklist:
+      "Check your EPF, PPF, ELSS, life-insurance, tuition-fee or eligible home-loan-principal records. The combined Section 80C limit and actual proofs still need verification.",
+  },
+  {
+    icon: "✚",
+    title: "Health insurance · 80D",
+    detail: "Premiums for yourself, family or parents may matter",
+    checklist:
+      "Check the premium certificate, who paid it, and the insured persons’ ages. The available limit can vary, so this demo does not estimate a benefit yet.",
+  },
+  {
+    icon: "⌂",
+    title: "Home-loan interest · 24(b)",
+    detail: "Interest certificate and property details may matter",
+    checklist:
+      "Use the lender’s annual certificate to separate interest from principal, then confirm the property use and applicable conditions before claiming anything.",
+  },
+  {
+    icon: "⌁",
+    title: "HRA and rent",
+    detail: "Salary structure and rent evidence may affect exemption",
+    checklist:
+      "Check whether your salary includes HRA, your rent receipts and the relevant city details. TaxPath keeps this as a review item, not an automatic claim.",
+  },
+];
+
 const stages: Record<Stage, number> = {
   home: 0,
   documents: 1,
@@ -104,21 +204,33 @@ function Icon({ children }: { children: string }) {
 function App() {
   const [stage, setStage] = useState<Stage>("home");
   const [scenarioId, setScenarioId] = useState<ScenarioId>("priya");
+  const [regime, setRegime] = useState<TaxRegime>("old");
   const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem("taxpath-theme") as Theme) || "light",
   );
   const [showWhy, setShowWhy] = useState(false);
   const [showExplain, setShowExplain] = useState(false);
+  const [selectedSavingCheck, setSelectedSavingCheck] =
+    useState<SavingCheck | null>(null);
   const [npsAnswer, setNpsAnswer] = useState<"yes" | "no" | "unsure" | null>(
     null,
   );
   const [assistant, setAssistant] = useState<string | null>(null);
+  const [assistantQuestion, setAssistantQuestion] = useState<string | null>(
+    null,
+  );
+  const [selectedDocument, setSelectedDocument] =
+    useState<DocumentOption | null>(null);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [tourStep, setTourStep] = useState(() =>
     localStorage.getItem("taxpath-tour-seen") ? -1 : 0,
   );
   const scenario = scenarios[scenarioId] ?? scenarios.priya;
-  const impact = useMemo(() => estimatedNpsImpact(50_000), []);
+  const isOldRegime = regime === "old";
+  const impact = useMemo(
+    () => (isOldRegime ? estimatedNpsImpact(50_000) : 0),
+    [isOldRegime],
+  );
   const mismatch = tdsDifference(scenario.form16Tds, scenario.aisTds);
 
   useEffect(() => {
@@ -133,29 +245,37 @@ function App() {
   }, [theme]);
 
   function beginParsing() {
+    setSelectedDocument(null);
     setStage("parsing");
     window.setTimeout(() => setStage("understood"), 1600);
   }
   function answerNps(answer: "yes" | "no" | "unsure") {
     setNpsAnswer(answer);
+    setSelectedSavingCheck(null);
     window.setTimeout(() => setStage("opportunity"), 340);
   }
   function selectScenario(id: ScenarioId) {
     setScenarioId(id);
     setNpsAnswer(null);
     setAssistant(null);
+    setAssistantQuestion(null);
+    setSelectedDocument(null);
     setAssistantOpen(false);
     setShowExplain(false);
+    setSelectedSavingCheck(null);
     setStage("home");
   }
   function quickAnswer(prompt: string) {
+    const question = prompt.trim();
+    if (!question) return;
     const answers: Record<string, string> = {
       "Why is my tax this high?":
         "Most of " +
         scenario.firstName +
         "'s tax comes from salary. We have not treated the NPS check as a confirmed saving yet.",
-      "Can I save tax?":
-        "There is one potential NPS benefit to verify. TaxPath will not promise it until the relevant conditions are checked.",
+      "Can I save tax?": isOldRegime
+        ? "The old-regime demo highlights NPS, Section 80C, health insurance, home-loan interest and HRA as separate items to verify. TaxPath will not promise a saving until the relevant conditions and proofs are checked."
+        : "In this new-regime demo, TaxPath does not apply a personal NPS deduction. You can compare regimes before you file.",
       "What is this mismatch?": mismatch
         ? "Your Form 16 and AIS differ by " +
           money.format(mismatch) +
@@ -166,7 +286,30 @@ function App() {
           ? "Review the AIS / Form 16 TDS difference before you move to filing."
           : "Complete the remaining check, then review your filing readiness.",
     };
-    setAssistant(answers[prompt]);
+    const stageGuidance: Record<Stage, string> = {
+      home: "Start with the synthetic Form 16. I’ll show what I understood before asking any follow-up questions.",
+      documents:
+        "Choose the highlighted Form 16 for the strongest demo journey, or select any document you recognise to get a helpful explanation.",
+      parsing:
+        "I’m reading the safe, preloaded sample now. No real document or government account is involved.",
+      understood:
+        "Review the income and TDS summary, then continue to the short relevant check.",
+      question:
+        "Answer based on what you know. You can open “Why are you asking?” before choosing, and the prototype does not make a final eligibility decision.",
+      opportunity:
+        "This screen shows a potential benefit, not a promise. Use “Show me why” to see the assumptions before you continue.",
+      readiness:
+        scenario.status === "stop"
+          ? "Open the highlighted review item, compare the source records, and update the demo only after you confirm the amount."
+          : "Review the highlighted item before continuing. TaxPath keeps the decision clear and does not submit anything for you.",
+    };
+    setAssistantQuestion(question);
+    setAssistant(
+      answers[question] ??
+        "I can help with this screen. " +
+          stageGuidance[stage] +
+          " For official tax advice, confirm the source documents or speak to a qualified professional.",
+    );
     setAssistantOpen(true);
   }
   function closeTour() {
@@ -209,6 +352,19 @@ function App() {
                   Demo: {item.label}
                 </option>
               ))}
+            </select>
+          </label>
+          <label className="regime-select">
+            <span className="sr-only">Tax regime</span>
+            <select
+              value={regime}
+              onChange={(event) => {
+                setRegime(event.target.value as TaxRegime);
+                setSelectedSavingCheck(null);
+              }}
+            >
+              <option value="new">New regime</option>
+              <option value="old">Old regime</option>
             </select>
           </label>
           <label className="theme-select">
@@ -274,6 +430,10 @@ function App() {
                   <Icon>⌁</Icon> This demo uses only synthetic information.
                   Please don’t upload real tax documents.
                 </p>
+                <div className="hero-art" aria-hidden="true">
+                  <img src={taxCheckIllustration} alt="" />
+                  <span>Understand · check · proceed</span>
+                </div>
               </div>
               <aside className="snapshot-card">
                 <div className="snapshot-head">
@@ -314,42 +474,68 @@ function App() {
               matter next.
             </p>
             <div className="document-grid">
-              {[
-                ["▤", "Form 16", "Best place to start"],
-                ["◫", "AIS", "Your reported income"],
-                ["✓", "26AS", "Your TDS records"],
-                ["▱", "Investment proof", "Savings & deductions"],
-                ["⌂", "Home-loan certificate", "Interest & principal"],
-                ["⋯", "Other document", "Salary slip, bank statement…"],
-              ].map(([icon, title, detail], index) => (
+              {documentOptions.map((document) => (
                 <button
-                  className={"document-card " + (index === 0 ? "featured" : "")}
-                  key={title}
-                  onClick={
-                    index === 0
-                      ? beginParsing
-                      : () =>
-                          setAssistant(
-                            "That document can be useful. For the strongest demo journey, start with the synthetic Form 16.",
-                          )
+                  className={
+                    "document-card " +
+                    (document.supported ? "featured" : "guided")
+                  }
+                  key={document.title}
+                  onClick={() =>
+                    document.supported
+                      ? beginParsing()
+                      : setSelectedDocument(document)
                   }
                 >
-                  <span className="document-icon">{icon}</span>
-                  <strong>{title}</strong>
-                  <small>{detail}</small>
-                  {index === 0 && (
+                  <span className="document-icon">{document.icon}</span>
+                  <strong>{document.title}</strong>
+                  <small>{document.detail}</small>
+                  {document.supported ? (
                     <span className="recommended">Recommended</span>
+                  ) : (
+                    <span className="document-status">Guided preview</span>
                   )}
                 </button>
               ))}
             </div>
+            {selectedDocument && (
+              <aside className="document-guide" aria-live="polite">
+                <div>
+                  <div className="step-label">DOCUMENT GUIDANCE</div>
+                  <h2>{selectedDocument.title}</h2>
+                  <p>
+                    This document is recognised in the prototype, but its
+                    automated analysis is not part of this demo journey yet.
+                  </p>
+                </div>
+                <div className="document-guide-data">
+                  <div>
+                    <span>Source</span>
+                    <strong>{selectedDocument.source}</strong>
+                  </div>
+                  <div>
+                    <span>TaxPath would check</span>
+                    <strong>{selectedDocument.checks.join(" · ")}</strong>
+                  </div>
+                  <div>
+                    <span>Demo status</span>
+                    <strong>Guidance available</strong>
+                  </div>
+                </div>
+                <button className="button primary" onClick={beginParsing}>
+                  Continue with Form 16 demo <span>→</span>
+                </button>
+              </aside>
+            )}
             <button
               className="unknown-link"
-              onClick={() =>
+              onClick={() => {
+                setAssistantQuestion("I don’t know what I need");
                 setAssistant(
-                  "That’s okay. That’s exactly why I’m here. Start with any document you recognise, or use the demo Form 16.",
-                )
-              }
+                  "That’s okay. Start with any document you recognise. For this prototype’s complete, guided journey, choose the synthetic Form 16.",
+                );
+                setAssistantOpen(true);
+              }}
             >
               I don’t know what I need <span>→</span>
             </button>
@@ -437,11 +623,14 @@ function App() {
             </div>
             <div className="question-card">
               <div className="question-symbol">✦</div>
-              <div className="step-label">A POTENTIAL BENEFIT</div>
+              <div className="step-label">
+                {isOldRegime ? "A POTENTIAL BENEFIT" : "A REGIME CHECK"}
+              </div>
               <h1>Do you contribute to NPS?</h1>
               <p>
-                National Pension System contributions can matter to your tax
-                calculation in some situations.
+                {isOldRegime
+                  ? "National Pension System contributions can matter to your tax calculation in some situations."
+                  : "Your selected new regime changes how this personal NPS contribution is treated in this synthetic demo."}
               </p>
               <button
                 className="why-button"
@@ -475,29 +664,42 @@ function App() {
           <section className="page opportunity-page">
             <div className="step-label">YOUR TAX OPPORTUNITIES</div>
             <h1>
-              {npsAnswer === "no"
-                ? "One thing is still worth checking."
-                : "I found something worth checking."}
+              {isOldRegime
+                ? npsAnswer === "no"
+                  ? "Several things are still worth checking."
+                  : "I found several areas worth checking."
+                : "Your regime choice changes this check."}
             </h1>
             <p className="intro">
-              This is not a confirmed tax saving. It is a useful next question
-              based on the information in this synthetic demo.
+              {isOldRegime
+                ? "This is not a confirmed tax saving. It is a useful next question based on the information in this synthetic demo."
+                : "Under this synthetic new-regime scenario, TaxPath does not apply a personal NPS deduction. It keeps the item visible so you can compare before filing."}
             </p>
             <article className="opportunity-card">
               <div className="opportunity-icon">✦</div>
               <div className="opportunity-content">
-                <div className="tag positive">POTENTIAL BENEFIT</div>
+                <div className="tag positive">
+                  {isOldRegime ? "POTENTIAL BENEFIT" : "REGIME CHECK"}
+                </div>
                 <h2>NPS contribution</h2>
                 <p>
-                  We found a possible contribution of ₹50,000 to check.
-                  Depending on your selected regime and applicable conditions,
-                  it may affect your calculation.
+                  {isOldRegime
+                    ? "We found a possible contribution of ₹50,000 to check. Depending on your selected regime and applicable conditions, it may affect your calculation."
+                    : "The ₹50,000 personal contribution remains visible for comparison, but TaxPath does not apply it as a deduction in this new-regime demo."}
                 </p>
               </div>
               <div className="impact">
-                <span>Potential tax impact</span>
+                <span>
+                  {isOldRegime
+                    ? "Potential tax impact"
+                    : "Tax impact in this demo"}
+                </span>
                 <strong>{money.format(impact)}</strong>
-                <small>Estimated, not confirmed</small>
+                <small>
+                  {isOldRegime
+                    ? "Estimated, not confirmed"
+                    : "Not applied in new regime"}
+                </small>
               </div>
               <button
                 className="explain-button"
@@ -507,32 +709,100 @@ function App() {
               </button>
               {showExplain && (
                 <div className="explain-panel">
-                  <Data label="Possible NPS contribution" value="₹50,000" />
-                  <span>↓</span>
                   <Data
-                    label="Prototype estimate"
-                    value="20% marginal rate + cess"
+                    label="Selected regime"
+                    value={isOldRegime ? "Old regime" : "New regime"}
                   />
                   <span>↓</span>
                   <Data
-                    label="Potential tax impact"
-                    value={money.format(impact)}
+                    label={
+                      isOldRegime
+                        ? "Possible NPS contribution"
+                        : "Personal NPS deduction"
+                    }
+                    value={isOldRegime ? "₹50,000" : "Not applied in this demo"}
+                  />
+                  <span>↓</span>
+                  <Data
+                    label={isOldRegime ? "Potential tax impact" : "Next step"}
+                    value={
+                      isOldRegime
+                        ? money.format(impact)
+                        : "Compare before filing"
+                    }
                   />
                   <p>
-                    This is a transparent illustration, not a filing
-                    calculation. TaxPath needs to verify the relevant conditions
-                    before treating it as a confirmed benefit.
+                    {isOldRegime
+                      ? "This is a transparent illustration, not a filing calculation. TaxPath needs to verify the relevant conditions before treating it as a confirmed benefit."
+                      : "This is a regime comparison, not a filing calculation. TaxPath keeps the contribution visible so you can make an informed choice before filing."}
                   </p>
                 </div>
               )}
             </article>
+            {isOldRegime && (
+              <section className="saving-checks" aria-labelledby="saving-checks-title">
+                <div className="saving-checks-heading">
+                  <div>
+                    <div className="step-label">MORE OLD-REGIME CHECKS</div>
+                    <h2 id="saving-checks-title">Explore other tax-saving sections</h2>
+                  </div>
+                  <p>
+                    These are separate checks, not additions to the NPS estimate.
+                    Open one to see exactly what evidence to review.
+                  </p>
+                </div>
+                <div className="saving-check-grid">
+                  {oldRegimeSavingChecks.map((check) => (
+                    <button
+                      key={check.title}
+                      className={
+                        "saving-check" +
+                        (selectedSavingCheck?.title === check.title
+                          ? " selected"
+                          : "")
+                      }
+                      onClick={() => setSelectedSavingCheck(check)}
+                      aria-expanded={selectedSavingCheck?.title === check.title}
+                    >
+                      <span className="saving-check-icon" aria-hidden="true">
+                        {check.icon}
+                      </span>
+                      <span>
+                        <strong>{check.title}</strong>
+                        <small>{check.detail}</small>
+                      </span>
+                      <span className="saving-check-arrow" aria-hidden="true">
+                        →
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                {selectedSavingCheck && (
+                  <article className="saving-check-detail" aria-live="polite">
+                    <div>
+                      <span className="step-label">WHAT TO VERIFY</span>
+                      <h3>{selectedSavingCheck.title}</h3>
+                      <p>{selectedSavingCheck.checklist}</p>
+                    </div>
+                    <button
+                      className="saving-check-close"
+                      onClick={() => setSelectedSavingCheck(null)}
+                    >
+                      Close <span>×</span>
+                    </button>
+                  </article>
+                )}
+              </section>
+            )}
             <div className="opportunity-list">
-              <Mini
-                icon="✓"
-                colour="green"
-                title="Health insurance"
-                detail="Information found in your sample data"
-              />
+              {!isOldRegime && (
+                <Mini
+                  icon="✓"
+                  colour="green"
+                  title="Health insurance"
+                  detail="Information found in your sample data"
+                />
+              )}
               <Mini
                 icon={mismatch ? "!" : "✓"}
                 colour={mismatch ? "red" : "green"}
@@ -556,6 +826,7 @@ function App() {
           <Readiness
             scenario={scenario}
             mismatch={mismatch}
+            regime={regime}
             onAssistant={quickAnswer}
             onHome={() => setStage("home")}
           />
@@ -565,6 +836,7 @@ function App() {
         <Assistant
           onPrompt={quickAnswer}
           answer={assistant}
+          question={assistantQuestion}
           open={assistantOpen}
           onToggle={() => setAssistantOpen(!assistantOpen)}
           onClose={() => setAssistantOpen(false)}
@@ -660,16 +932,19 @@ function Progress({ active }: { active: number }) {
 function Assistant({
   onPrompt,
   answer,
+  question,
   open,
   onToggle,
   onClose,
 }: {
   onPrompt: (prompt: string) => void;
   answer: string | null;
+  question: string | null;
   open: boolean;
   onToggle: () => void;
   onClose: () => void;
 }) {
+  const [query, setQuery] = useState("");
   const prompts = [
     "Why is my tax this high?",
     "Can I save tax?",
@@ -704,6 +979,32 @@ function Assistant({
               </button>
             ))}
           </div>
+          <form
+            className="assistant-compose"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (!query.trim()) return;
+              onPrompt(query);
+              setQuery("");
+            }}
+          >
+            <label className="sr-only" htmlFor="assistant-question">
+              Ask a question about this screen
+            </label>
+            <input
+              id="assistant-question"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Ask if you’re stuck…"
+              autoComplete="off"
+            />
+            <button type="submit" aria-label="Send question">
+              Send
+            </button>
+          </form>
+          {question && (
+            <div className="assistant-question">You: {question}</div>
+          )}
           {answer && (
             <div className="assistant-answer" role="status">
               {answer}
@@ -797,29 +1098,38 @@ function Tour({
 function Readiness({
   scenario,
   mismatch,
+  regime,
   onAssistant,
   onHome,
 }: {
   scenario: Scenario;
   mismatch: number;
+  regime: TaxRegime;
   onAssistant: (prompt: string) => void;
   onHome: () => void;
 }) {
-  const stop = scenario.status === "stop";
-  const ready = scenario.status === "ready";
-  const title = ready
-    ? "You’re ready to move forward."
-    : stop
-      ? "Don’t file yet."
-      : "You’re almost ready.";
-  const subtext = ready
-    ? "We checked the synthetic information you provided."
-    : stop
-      ? "We found information that may need attention before you file."
-      : "One thing is worth checking first.";
   const [reviewOpen, setReviewOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
   const [reviewUpdated, setReviewUpdated] = useState(false);
+  const [reviewSource, setReviewSource] = useState<string | null>(null);
+  const reviewComplete = reviewUpdated && scenario.status !== "ready";
+  const effectiveStatus = reviewComplete ? "ready" : scenario.status;
+  const stop = effectiveStatus === "stop";
+  const ready = effectiveStatus === "ready";
+  const title = reviewComplete
+    ? "You’re ready to continue."
+    : ready
+      ? "You’re ready to move forward."
+      : stop
+        ? "Don’t file yet."
+        : "You’re almost ready.";
+  const subtext = reviewComplete
+    ? "Your source choice is recorded in this demo. TaxPath has not filed anything for you."
+    : ready
+      ? "We checked the synthetic information you provided."
+      : stop
+        ? "We found information that may need attention before you file."
+        : "One thing is worth checking first.";
   function reviewIssue() {
     setReviewOpen(true);
     setUpdateOpen(true);
@@ -834,10 +1144,22 @@ function Readiness({
   }
   return (
     <section className="page readiness-page">
-      <div className={"readiness-hero " + scenario.status}>
+      <div className={"readiness-hero " + effectiveStatus}>
+        <img
+          className="readiness-art"
+          src={taxCheckIllustration}
+          alt=""
+          aria-hidden="true"
+        />
         <div className="readiness-symbol">{ready ? "✓" : stop ? "!" : "○"}</div>
         <div className="step-label">
-          {ready ? "READY" : stop ? "DON’T FILE YET" : "ALMOST READY"}
+          {reviewComplete
+            ? "REVIEW COMPLETE"
+            : ready
+              ? "READY"
+              : stop
+                ? "DON’T FILE YET"
+                : "ALMOST READY"}
         </div>
         <h1>{title}</h1>
         <p>{subtext}</p>
@@ -851,13 +1173,15 @@ function Readiness({
         <div>
           <div className="step-label">YOUR TAX CHECK</div>
           <h2>
-            {scenario.attention
-              ? String(scenario.attention) +
-                " thing" +
-                (scenario.attention > 1 ? "s " : " ") +
-                (scenario.attention > 1 ? "need" : "needs") +
-                " your attention"
-              : "Everything you shared has been checked"}
+            {reviewComplete
+              ? "Your review is complete"
+              : scenario.attention
+                ? String(scenario.attention) +
+                  " thing" +
+                  (scenario.attention > 1 ? "s " : " ") +
+                  (scenario.attention > 1 ? "need" : "needs") +
+                  " your attention"
+                : "Everything you shared has been checked"}
           </h2>
         </div>
         <div className="check-grid">
@@ -888,10 +1212,16 @@ function Readiness({
             }
             state={scenario.id === "meera" && !reviewUpdated ? "warn" : "good"}
           />
-          <Check label="Regime" value="Compared" state="good" />
+          <Check
+            label="Regime"
+            value={
+              regime === "old" ? "Old regime selected" : "New regime selected"
+            }
+            state="good"
+          />
         </div>
       </div>
-      {ready && (
+      {scenario.status === "ready" && (
         <div className="empty-state" role="status">
           <span>✓</span>
           <div>
@@ -906,12 +1236,21 @@ function Readiness({
       {mismatch > 0 && (
         <article id="mismatch-details" className="mismatch-card" tabIndex={-1}>
           <div className="mismatch-header">
-            <span className="status-dot bad">!</span>
+            <span className={"status-dot " + (reviewComplete ? "good" : "bad")}>
+              {reviewComplete ? "✓" : "!"}
+            </span>
             <div>
-              <h2>Something doesn’t match.</h2>
+              <h2>
+                {reviewComplete
+                  ? "TDS review is complete."
+                  : "Something doesn’t match."}
+              </h2>
               <p>
-                These two records show different TDS amounts. Before filing,
-                it’s worth checking which figure is correct.
+                {reviewComplete
+                  ? "The " +
+                    reviewSource +
+                    " source is recorded for this demo. Confirm any official correction directly with the relevant source before filing."
+                  : "These two records show different TDS amounts. Before filing, it’s worth checking which figure is correct."}
               </p>
             </div>
           </div>
@@ -958,10 +1297,20 @@ function Readiness({
                     updates the demo status, not an official record.
                   </p>
                   <div className="review-options">
-                    <button onClick={() => setReviewUpdated(true)}>
+                    <button
+                      onClick={() => {
+                        setReviewSource("Form 16");
+                        setReviewUpdated(true);
+                      }}
+                    >
                       Use Form 16: ₹1,42,000
                     </button>
-                    <button onClick={() => setReviewUpdated(true)}>
+                    <button
+                      onClick={() => {
+                        setReviewSource("AIS");
+                        setReviewUpdated(true);
+                      }}
+                    >
                       Use AIS: ₹1,32,000
                     </button>
                   </div>
@@ -969,8 +1318,8 @@ function Readiness({
               )}
               {reviewUpdated && (
                 <p className="review-confirmation" role="status">
-                  ✓ Review recorded in this demo. The TDS and AIS checks are now
-                  marked as reviewed.
+                  ✓ Review recorded using {reviewSource}. The TDS and AIS checks
+                  are now marked as reviewed.
                 </p>
               )}
             </div>
@@ -1019,7 +1368,10 @@ function Readiness({
                   </p>
                   <button
                     className="review-done"
-                    onClick={() => setReviewUpdated(true)}
+                    onClick={() => {
+                      setReviewSource("bank interest");
+                      setReviewUpdated(true);
+                    }}
                   >
                     Mark ₹12,600 as reviewed
                   </button>
