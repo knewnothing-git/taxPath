@@ -365,6 +365,7 @@ function Icon({ children }: { children: string }) {
 
 function App() {
   const [stage, setStage] = useState<Stage>("home");
+  const [showWelcome, setShowWelcome] = useState(true);
   const [scenarioId, setScenarioId] = useState<ScenarioId>("priya");
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [regime, setRegime] = useState<TaxRegime>("old");
@@ -411,6 +412,15 @@ function App() {
         : theme;
     document.documentElement.dataset.theme = actualTheme;
   }, [theme]);
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = window.setTimeout(
+      () => setShowWelcome(false),
+      reducedMotion ? 450 : 2400,
+    );
+    return () => window.clearTimeout(timer);
+  }, []);
 
   function beginParsing() {
     if (journeyMode === "automated") {
@@ -1214,7 +1224,35 @@ function App() {
       {tourStep >= 0 && (
         <Tour step={tourStep} onNext={nextTourStep} onClose={closeTour} />
       )}
+      {showWelcome && <WelcomeSplash onEnter={() => setShowWelcome(false)} />}
     </div>
+  );
+}
+function WelcomeSplash({ onEnter }: { onEnter: () => void }) {
+  return (
+    <section
+      className="welcome-splash"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="welcome-title"
+    >
+      <div className="welcome-orbit welcome-orbit-one" aria-hidden="true" />
+      <div className="welcome-orbit welcome-orbit-two" aria-hidden="true" />
+      <div className="welcome-content">
+        <div className="welcome-mark" aria-hidden="true">✦</div>
+        <div className="welcome-brand" id="welcome-title">taxpath</div>
+        <p className="welcome-tagline">the <em>right</em> path</p>
+        <div className="welcome-path" aria-hidden="true">
+          <span />
+          <i />
+          <b />
+        </div>
+        <p className="welcome-status">A calmer way to understand your tax.</p>
+        <button className="welcome-enter" onClick={onEnter} autoFocus>
+          Enter TaxPath <span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </section>
   );
 }
 function Mini({
