@@ -13,6 +13,23 @@ type Stage =
 type ScenarioId = "priya" | "arjun" | "meera";
 type Theme = "light" | "dark" | "system";
 type TaxRegime = "new" | "old";
+type JourneyMode = "automated" | "guided" | null;
+type AutomationStep =
+  | "idle"
+  | "choose-document"
+  | "processing"
+  | "nps-question"
+  | "reviewing"
+  | "complete";
+type TaxOLanguage =
+  | "en"
+  | "hi"
+  | "bn"
+  | "ta"
+  | "te"
+  | "mr"
+  | "kn"
+  | "ml";
 
 type Scenario = {
   id: ScenarioId;
@@ -46,6 +63,15 @@ type SavingCheck = {
   title: string;
   detail: string;
   checklist: string;
+};
+
+type TaxOLanguageOption = {
+  label: string;
+  welcome: string;
+  guide: string;
+  ask: string;
+  placeholder: string;
+  send: string;
 };
 
 const scenarios: Record<ScenarioId, Scenario> = {
@@ -184,6 +210,73 @@ const oldRegimeSavingChecks: SavingCheck[] = [
   },
 ];
 
+const taxoLanguages: Record<TaxOLanguage, TaxOLanguageOption> = {
+  en: {
+    label: "English",
+    welcome: "Your multilingual tax guide",
+    guide: "Ask about this demo in your preferred language.",
+    ask: "What can I help you understand?",
+    placeholder: "Ask TaxO if you’re stuck…",
+    send: "Send",
+  },
+  hi: {
+    label: "हिंदी",
+    welcome: "आपका बहुभाषी टैक्स गाइड",
+    guide: "अपनी पसंदीदा भाषा में इस डेमो के बारे में पूछें।",
+    ask: "मैं क्या समझने में आपकी मदद करूँ?",
+    placeholder: "TaxO से पूछें…",
+    send: "भेजें",
+  },
+  bn: {
+    label: "বাংলা",
+    welcome: "আপনার বহুভাষী ট্যাক্স গাইড",
+    guide: "আপনার পছন্দের ভাষায় এই ডেমো সম্পর্কে জিজ্ঞাসা করুন।",
+    ask: "আমি কী বুঝতে সাহায্য করতে পারি?",
+    placeholder: "TaxO-কে জিজ্ঞাসা করুন…",
+    send: "পাঠান",
+  },
+  ta: {
+    label: "தமிழ்",
+    welcome: "உங்கள் பன்மொழி வரி வழிகாட்டி",
+    guide: "உங்கள் விருப்ப மொழியில் இந்த டெமோவைப் பற்றி கேளுங்கள்.",
+    ask: "நான் எதைப் புரிந்துகொள்ள உதவலாம்?",
+    placeholder: "TaxO-விடம் கேளுங்கள்…",
+    send: "அனுப்பு",
+  },
+  te: {
+    label: "తెలుగు",
+    welcome: "మీ బహుభాషా పన్ను మార్గదర్శి",
+    guide: "మీకు నచ్చిన భాషలో ఈ డెమో గురించి అడగండి.",
+    ask: "నేను ఏమి అర్థం చేసుకోవడంలో సహాయం చేయగలను?",
+    placeholder: "TaxOని అడగండి…",
+    send: "పంపు",
+  },
+  mr: {
+    label: "मराठी",
+    welcome: "तुमचा बहुभाषिक कर मार्गदर्शक",
+    guide: "तुमच्या पसंतीच्या भाषेत या डेमोबद्दल विचारा.",
+    ask: "मी काय समजून घेण्यास मदत करू?",
+    placeholder: "TaxO ला विचारा…",
+    send: "पाठवा",
+  },
+  kn: {
+    label: "ಕನ್ನಡ",
+    welcome: "ನಿಮ್ಮ ಬಹುಭಾಷಾ ತೆರಿಗೆ ಮಾರ್ಗದರ್ಶಿ",
+    guide: "ನಿಮ್ಮ ಆದ್ಯತೆಯ ಭಾಷೆಯಲ್ಲಿ ಈ ಡೆಮೊ ಬಗ್ಗೆ ಕೇಳಿ.",
+    ask: "ನಾನು ಏನನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಸಹಾಯ ಮಾಡಲಿ?",
+    placeholder: "TaxO ಅನ್ನು ಕೇಳಿ…",
+    send: "ಕಳುಹಿಸಿ",
+  },
+  ml: {
+    label: "മലയാളം",
+    welcome: "നിങ്ങളുടെ ബഹുഭാഷാ നികുതി ഗൈഡ്",
+    guide: "നിങ്ങളുടെ ഇഷ്ടഭാഷയിൽ ഈ ഡെമോയെക്കുറിച്ച് ചോദിക്കൂ.",
+    ask: "എന്ത് മനസ്സിലാക്കാൻ ഞാൻ സഹായിക്കട്ടെ?",
+    placeholder: "TaxO യോട് ചോദിക്കൂ…",
+    send: "അയയ്ക്കുക",
+  },
+};
+
 const stages: Record<Stage, number> = {
   home: 0,
   documents: 1,
@@ -222,6 +315,11 @@ function App() {
   const [selectedDocument, setSelectedDocument] =
     useState<DocumentOption | null>(null);
   const [assistantOpen, setAssistantOpen] = useState(false);
+  const [journeyMode, setJourneyMode] = useState<JourneyMode>(null);
+  const [automationStep, setAutomationStep] =
+    useState<AutomationStep>("idle");
+  const [taxoContext, setTaxoContext] = useState<string | null>(null);
+  const [taxoLanguage, setTaxoLanguage] = useState<TaxOLanguage>("en");
   const [tourStep, setTourStep] = useState(() =>
     localStorage.getItem("taxpath-tour-seen") ? -1 : 0,
   );
@@ -245,11 +343,93 @@ function App() {
   }, [theme]);
 
   function beginParsing() {
+    if (journeyMode === "automated") {
+      startTaxOForm16();
+      return;
+    }
     setSelectedDocument(null);
     setStage("parsing");
     window.setTimeout(() => setStage("understood"), 1600);
   }
+  function startTaxOForm16() {
+    setSelectedDocument(null);
+    setAutomationStep("processing");
+    setTaxoContext(
+      "TaxO reads the synthetic Form 16, extracts salary and TDS, and prepares the same checks shown in this demo. It never files or submits anything.",
+    );
+    setStage("parsing");
+    window.setTimeout(() => {
+      setStage("understood");
+      setAutomationStep("nps-question");
+    }, 1600);
+  }
+  function answerTaxOAutomation(answer: "yes" | "no" | "unsure") {
+    setNpsAnswer(answer);
+    setSelectedSavingCheck(null);
+    setAutomationStep("reviewing");
+    setStage("question");
+    window.setTimeout(() => {
+      setStage("opportunity");
+      setAutomationStep("complete");
+    }, 520);
+  }
+  function startJourney(mode: Exclude<JourneyMode, null>) {
+    setJourneyMode(mode);
+    setSelectedDocument(null);
+    setAutomationStep(mode === "automated" ? "choose-document" : "idle");
+    setAssistantQuestion(null);
+    setAssistant(null);
+    setTaxoContext(
+      mode === "automated"
+        ? "TaxO will prepare the synthetic Form 16 path alongside the familiar TaxPath checks. Nothing is filed in this demo."
+        : null,
+    );
+    setAssistantOpen(mode === "automated");
+    setStage("documents");
+  }
+  function switchJourneyMode() {
+    const nextMode = journeyMode === "automated" ? "guided" : "automated";
+    setJourneyMode(nextMode);
+    setSelectedDocument(null);
+    setAssistantQuestion(null);
+    setAssistant(null);
+    if (nextMode === "guided") {
+      setAutomationStep("idle");
+      setTaxoContext(null);
+      setAssistantOpen(false);
+      return;
+    }
+    const nextStep: AutomationStep =
+      stage === "documents"
+        ? "choose-document"
+        : stage === "parsing"
+          ? "processing"
+          : stage === "understood" || stage === "question"
+            ? "nps-question"
+            : "complete";
+    setAutomationStep(nextStep);
+    setTaxoContext("TaxO is continuing at your current step. It does not reset your progress or submit anything.");
+    setAssistantOpen(true);
+  }
+  function returnHome() {
+    setStage("home");
+    setJourneyMode(null);
+    setAutomationStep("idle");
+    setTaxoContext(null);
+    setAssistant(null);
+    setAssistantQuestion(null);
+    setAssistantOpen(false);
+    setSelectedDocument(null);
+    setSelectedSavingCheck(null);
+    setNpsAnswer(null);
+    setShowWhy(false);
+    setShowExplain(false);
+  }
   function answerNps(answer: "yes" | "no" | "unsure") {
+    if (journeyMode === "automated") {
+      answerTaxOAutomation(answer);
+      return;
+    }
     setNpsAnswer(answer);
     setSelectedSavingCheck(null);
     window.setTimeout(() => setStage("opportunity"), 340);
@@ -261,6 +441,9 @@ function App() {
     setAssistantQuestion(null);
     setSelectedDocument(null);
     setAssistantOpen(false);
+    setJourneyMode(null);
+    setAutomationStep("idle");
+    setTaxoContext(null);
     setShowExplain(false);
     setSelectedSavingCheck(null);
     setStage("home");
@@ -268,7 +451,10 @@ function App() {
   function quickAnswer(prompt: string) {
     const question = prompt.trim();
     if (!question) return;
+    setTaxoContext(null);
     const answers: Record<string, string> = {
+      "Explain TaxO process":
+        "TaxO uses the synthetic Form 16 to read salary, TDS and the financial year, then asks only relevant follow-up questions. It prepares review checks for you to inspect; it does not file, submit or make a final eligibility decision.",
       "Why is my tax this high?":
         "Most of " +
         scenario.firstName +
@@ -304,11 +490,15 @@ function App() {
           : "Review the highlighted item before continuing. TaxPath keeps the decision clear and does not submit anything for you.",
     };
     setAssistantQuestion(question);
-    setAssistant(
+    const response =
       answers[question] ??
-        "I can help with this screen. " +
-          stageGuidance[stage] +
-          " For official tax advice, confirm the source documents or speak to a qualified professional.",
+      "I can help with this screen. " +
+        stageGuidance[stage] +
+        " For official tax advice, confirm the source documents or speak to a qualified professional.";
+    setAssistant(
+      taxoLanguage === "en"
+        ? response
+        : taxoLanguages[taxoLanguage].guide + " " + response,
     );
     setAssistantOpen(true);
   }
@@ -332,7 +522,7 @@ function App() {
       <header className="topbar">
         <button
           className="brand"
-          onClick={() => setStage("home")}
+          onClick={returnHome}
           aria-label="Go to TaxPath home"
         >
           <span className="brand-mark">✦</span>
@@ -393,8 +583,24 @@ function App() {
           </button>
         </div>
       </header>
-      <main>
+      <main className={journeyMode === "automated" ? "taxo-led-main" : ""}>
         {stage !== "home" && <Progress active={stages[stage]} />}
+        {stage !== "home" && journeyMode && (
+          <div className="journey-mode-banner">
+            <span className={journeyMode === "automated" ? "taxo-mode-dot" : "manual-mode-dot"} aria-hidden="true" />
+            <div>
+              <strong>{journeyMode === "automated" ? "TaxO-led check" : "Manual review"}</strong>
+              <small>
+                {journeyMode === "automated"
+                  ? "TaxO drives the demo conversation; you review each outcome."
+                  : "You choose the documents, checks and next steps yourself."}
+              </small>
+            </div>
+            <button onClick={switchJourneyMode}>
+              Switch to {journeyMode === "automated" ? "manual review" : "TaxO-led check"}
+            </button>
+          </div>
+        )}
         {stage === "home" && (
           <section className="hero page">
             <div className="eyebrow">
@@ -412,23 +618,37 @@ function App() {
                   I’ll look at what you already have and help you figure out
                   what’s worth checking—before you file.
                 </p>
-                <div className="button-row">
-                  <button
-                    className="button primary"
-                    onClick={() => setStage("documents")}
-                  >
-                    Start my tax check <span>→</span>
-                  </button>
-                  <button
-                    className="button secondary"
-                    onClick={() => setStage("documents")}
-                  >
-                    I already have documents
-                  </button>
-                </div>
+                <section className="journey-choice" aria-labelledby="journey-title">
+                  <div className="step-label">CHOOSE YOUR START</div>
+                  <h2 id="journey-title">How would you like to prepare?</h2>
+                  <div className="journey-choice-grid">
+                    <button
+                      className="journey-option automated"
+                      onClick={() => startJourney("automated")}
+                    >
+                      <span className="journey-option-icon" aria-hidden="true">✦</span>
+                      <span>
+                        <strong>Let TaxO prepare my check</strong>
+                        <small>A conversational Form 16 demo, led by TaxO</small>
+                      </span>
+                      <span aria-hidden="true">→</span>
+                    </button>
+                    <button
+                      className="journey-option"
+                      onClick={() => startJourney("guided")}
+                    >
+                      <span className="journey-option-icon manual" aria-hidden="true">↗</span>
+                      <span>
+                        <strong>I’ll review it myself</strong>
+                        <small>Choose documents and checks at your own pace</small>
+                      </span>
+                      <span aria-hidden="true">→</span>
+                    </button>
+                  </div>
+                </section>
                 <p className="privacy-note">
                   <Icon>⌁</Icon> This demo uses only synthetic information.
-                  Please don’t upload real tax documents.
+                  TaxO prepares checks but never files or submits anything.
                 </p>
                 <div className="hero-art" aria-hidden="true">
                   <img src={taxCheckIllustration} alt="" />
@@ -468,77 +688,103 @@ function App() {
         {stage === "documents" && (
           <section className="page flow-page">
             <div className="step-label">STEP 1 OF 5</div>
-            <h1>What do you have?</h1>
+            <h1>
+              {journeyMode === "automated"
+                ? "Let’s start TaxO with your Form 16."
+                : "What do you have?"}
+            </h1>
             <p className="intro">
-              Start anywhere. I’ll work with what you have and tell you what may
-              matter next.
+              {journeyMode === "automated"
+                ? "TaxO can prepare the synthetic Form 16 path and surface the same checks for your review."
+                : "Start anywhere. I’ll work with what you have and tell you what may matter next."}
             </p>
-            <div className="document-grid">
-              {documentOptions.map((document) => (
-                <button
-                  className={
-                    "document-card " +
-                    (document.supported ? "featured" : "guided")
-                  }
-                  key={document.title}
-                  onClick={() =>
-                    document.supported
-                      ? beginParsing()
-                      : setSelectedDocument(document)
-                  }
-                >
-                  <span className="document-icon">{document.icon}</span>
-                  <strong>{document.title}</strong>
-                  <small>{document.detail}</small>
-                  {document.supported ? (
-                    <span className="recommended">Recommended</span>
-                  ) : (
-                    <span className="document-status">Guided preview</span>
-                  )}
-                </button>
-              ))}
-            </div>
-            {selectedDocument && (
-              <aside className="document-guide" aria-live="polite">
+            {journeyMode === "automated" ? (
+              <aside className="taxo-source-summary" aria-live="polite">
+                <div className="taxo-source-mark" aria-hidden="true">▤</div>
                 <div>
-                  <div className="step-label">DOCUMENT GUIDANCE</div>
-                  <h2>{selectedDocument.title}</h2>
+                  <div className="step-label">TAXO SOURCE</div>
+                  <h2>Form 16 · synthetic demo</h2>
                   <p>
-                    This document is recognised in the prototype, but its
-                    automated analysis is not part of this demo journey yet.
+                    TaxO is ready to use the preloaded Form 16. Choose “Use
+                    synthetic Form 16” in the TaxO chat to continue.
                   </p>
                 </div>
-                <div className="document-guide-data">
-                  <div>
-                    <span>Source</span>
-                    <strong>{selectedDocument.source}</strong>
-                  </div>
-                  <div>
-                    <span>TaxPath would check</span>
-                    <strong>{selectedDocument.checks.join(" · ")}</strong>
-                  </div>
-                  <div>
-                    <span>Demo status</span>
-                    <strong>Guidance available</strong>
-                  </div>
+                <div className="taxo-source-checks">
+                  <span>Salary income</span>
+                  <span>TDS details</span>
+                  <span>Financial year</span>
                 </div>
-                <button className="button primary" onClick={beginParsing}>
-                  Continue with Form 16 demo <span>→</span>
-                </button>
               </aside>
+            ) : (
+              <>
+                <div className="document-grid">
+                  {documentOptions.map((document) => (
+                    <button
+                      className={
+                        "document-card " +
+                        (document.supported ? "featured" : "guided")
+                      }
+                      key={document.title}
+                      onClick={() =>
+                        document.supported
+                          ? beginParsing()
+                          : setSelectedDocument(document)
+                      }
+                    >
+                      <span className="document-icon">{document.icon}</span>
+                      <strong>{document.title}</strong>
+                      <small>{document.detail}</small>
+                      {document.supported ? (
+                        <span className="recommended">Recommended</span>
+                      ) : (
+                        <span className="document-status">Guided preview</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+                {selectedDocument && (
+                  <aside className="document-guide" aria-live="polite">
+                    <div>
+                      <div className="step-label">DOCUMENT GUIDANCE</div>
+                      <h2>{selectedDocument.title}</h2>
+                      <p>
+                        This document is recognised in the prototype, but its
+                        automated analysis is not part of this demo journey yet.
+                      </p>
+                    </div>
+                    <div className="document-guide-data">
+                      <div>
+                        <span>Source</span>
+                        <strong>{selectedDocument.source}</strong>
+                      </div>
+                      <div>
+                        <span>TaxPath would check</span>
+                        <strong>{selectedDocument.checks.join(" · ")}</strong>
+                      </div>
+                      <div>
+                        <span>Demo status</span>
+                        <strong>Guidance available</strong>
+                      </div>
+                    </div>
+                    <button className="button primary" onClick={beginParsing}>
+                      Continue with Form 16 demo <span>→</span>
+                    </button>
+                  </aside>
+                )}
+                <button
+                  className="unknown-link"
+                  onClick={() => {
+                    setAssistantQuestion("I don’t know what I need");
+                    setAssistant(
+                      "That’s okay. Start with any document you recognise. For this prototype’s complete, guided journey, choose the synthetic Form 16.",
+                    );
+                    setAssistantOpen(true);
+                  }}
+                >
+                  I don’t know what I need <span>→</span>
+                </button>
+              </>
             )}
-            <button
-              className="unknown-link"
-              onClick={() => {
-                setAssistantQuestion("I don’t know what I need");
-                setAssistant(
-                  "That’s okay. Start with any document you recognise. For this prototype’s complete, guided journey, choose the synthetic Form 16.",
-                );
-                setAssistantOpen(true);
-              }}
-            >
-              I don’t know what I need <span>→</span>
-            </button>
           </section>
         )}
         {stage === "parsing" && (
@@ -828,20 +1074,28 @@ function App() {
             mismatch={mismatch}
             regime={regime}
             onAssistant={quickAnswer}
-            onHome={() => setStage("home")}
+            onHome={returnHome}
           />
         )}
       </main>
-      {stage !== "parsing" && (
-        <Assistant
-          onPrompt={quickAnswer}
-          answer={assistant}
-          question={assistantQuestion}
-          open={assistantOpen}
-          onToggle={() => setAssistantOpen(!assistantOpen)}
-          onClose={() => setAssistantOpen(false)}
-        />
-      )}
+      <TaxO
+        onPrompt={quickAnswer}
+        answer={assistant}
+        question={assistantQuestion}
+        open={assistantOpen}
+        onToggle={() => setAssistantOpen(!assistantOpen)}
+        onClose={() => setAssistantOpen(false)}
+        language={taxoLanguage}
+        onLanguageChange={setTaxoLanguage}
+        journeyMode={journeyMode}
+        automationStep={automationStep}
+        onStartForm16={startTaxOForm16}
+        onAnswerAutomation={answerTaxOAutomation}
+        context={taxoContext}
+        isOldRegime={isOldRegime}
+        npsAnswer={npsAnswer}
+        stage={stage}
+      />
       {tourStep >= 0 && (
         <Tour step={tourStep} onNext={nextTourStep} onClose={closeTour} />
       )}
@@ -929,13 +1183,23 @@ function Progress({ active }: { active: number }) {
     </div>
   );
 }
-function Assistant({
+function TaxO({
   onPrompt,
   answer,
   question,
   open,
   onToggle,
   onClose,
+  language,
+  onLanguageChange,
+  journeyMode,
+  automationStep,
+  onStartForm16,
+  onAnswerAutomation,
+  context,
+  isOldRegime,
+  npsAnswer,
+  stage,
 }: {
   onPrompt: (prompt: string) => void;
   answer: string | null;
@@ -943,8 +1207,20 @@ function Assistant({
   open: boolean;
   onToggle: () => void;
   onClose: () => void;
+  language: TaxOLanguage;
+  onLanguageChange: (language: TaxOLanguage) => void;
+  journeyMode: JourneyMode;
+  automationStep: AutomationStep;
+  onStartForm16: () => void;
+  onAnswerAutomation: (answer: "yes" | "no" | "unsure") => void;
+  context: string | null;
+  isOldRegime: boolean;
+  npsAnswer: "yes" | "no" | "unsure" | null;
+  stage: Stage;
 }) {
   const [query, setQuery] = useState("");
+  const [showPrompts, setShowPrompts] = useState(false);
+  const copy = taxoLanguages[language];
   const prompts = [
     "Why is my tax this high?",
     "Can I save tax?",
@@ -952,35 +1228,138 @@ function Assistant({
     "What should I do next?",
   ];
   return (
-    <div className="assistant-float">
+    <div className="taxo-float">
       {open && (
-        <aside className="assistant-panel" aria-label="TaxPath Assistant">
-          <div className="assistant-panel-head">
-            <div className="assistant-title">
-              <span>✦</span>
+        <aside className="taxo-panel" aria-label="TaxO tax assistant">
+          <div className="taxo-panel-head">
+            <div className="taxo-title">
+              <span className="taxo-mini" aria-hidden="true">
+                <i />
+                <i />
+                <b />
+              </span>
               <div>
-                <strong>TaxPath Assistant</strong>
-                <small>Answers based on this demo</small>
+                <strong>TaxO</strong>
+                <small>{copy.welcome}</small>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="assistant-close"
-              aria-label="Close assistant"
+              className="taxo-close"
+              aria-label="Close TaxO"
             >
               ×
             </button>
           </div>
-          <p>What would you like to understand?</p>
-          <div className="prompt-list">
-            {prompts.map((prompt) => (
-              <button key={prompt} onClick={() => onPrompt(prompt)}>
-                {prompt}
-              </button>
-            ))}
+          <label className="taxo-language">
+            <span>Language</span>
+            <select
+              value={language}
+              onChange={(event) =>
+                onLanguageChange(event.target.value as TaxOLanguage)
+              }
+              aria-label="TaxO language"
+            >
+              {Object.entries(taxoLanguages).map(([code, option]) => (
+                <option key={code} value={code}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          {context && (
+            <div className="taxo-context" tabIndex={0}>
+              <span aria-hidden="true">i</span>
+              <div role="tooltip">{context}</div>
+              <small>About this automated demo</small>
+            </div>
+          )}
+          <div className="taxo-chat-log" aria-live="polite">
+            {journeyMode === "automated" && (
+              <>
+                <div className="taxo-bubble">
+                  Hi, I’m TaxO. I’ll prepare this synthetic return from a Form
+                  16, then show you each check before anything is decided.
+                </div>
+                {automationStep === "choose-document" && (
+                  <div className="taxo-replies">
+                    <button onClick={onStartForm16}>Use synthetic Form 16</button>
+                    <button onClick={() => onPrompt("Explain TaxO process")}>Explain the process</button>
+                  </div>
+                )}
+                {automationStep !== "choose-document" && (
+                  <>
+                    <div className="taxo-bubble">
+                      {automationStep === "processing"
+                        ? "I’m reading the synthetic Form 16: salary, employer TDS and financial year."
+                        : <>Form 16 understood. I found salary income and TDS. One quick check may affect your {isOldRegime ? "old-regime benefit" : "regime comparison"}.</>}
+                    </div>
+                    {automationStep === "processing" && (
+                      <div className="taxo-processing">
+                        <span className="loading-dot" aria-hidden="true" /> Processing Form 16
+                      </div>
+                    )}
+                  </>
+                )}
+                {(automationStep === "reviewing" || automationStep === "complete") && npsAnswer && (
+                  <div className="taxo-question">
+                    You: {npsAnswer === "unsure" ? "I’m not sure" : npsAnswer === "yes" ? "Yes" : "No"}
+                  </div>
+                )}
+                {automationStep === "nps-question" && (
+                  <>
+                    <div className="taxo-bubble taxo-question-bubble">
+                      Do you contribute to NPS?
+                    </div>
+                    <div className="taxo-replies">
+                      <button onClick={() => onAnswerAutomation("yes")}>Yes</button>
+                      <button onClick={() => onAnswerAutomation("no")}>No</button>
+                      <button onClick={() => onAnswerAutomation("unsure")}>I’m not sure</button>
+                    </div>
+                  </>
+                )}
+                {automationStep === "reviewing" && (
+                  <div className="taxo-bubble">Thanks. I’m preparing your review with that answer.</div>
+                )}
+                {automationStep === "complete" && (
+                  <>
+                    <div className="taxo-bubble">
+                      Process done. I prepared the same review checks for you
+                      below. Please review them before making any filing decision.
+                    </div>
+                    <div className="taxo-replies">
+                      <button onClick={() => onPrompt("Can I save tax?")}>Explain savings checks</button>
+                      <button onClick={() => onPrompt("What should I do next?")}>What should I do next?</button>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+            {question && <div className="taxo-question">You: {question}</div>}
+            {answer && (
+              <div className="taxo-answer" role="status">
+                {answer}
+              </div>
+            )}
           </div>
+          <button
+            className="taxo-suggestions-toggle"
+            onClick={() => setShowPrompts(!showPrompts)}
+            aria-expanded={showPrompts}
+          >
+            {copy.ask} <span>{showPrompts ? "−" : "+"}</span>
+          </button>
+          {showPrompts && (
+            <div className="taxo-prompt-list">
+              {prompts.map((prompt) => (
+                <button key={prompt} onClick={() => onPrompt(prompt)}>
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          )}
           <form
-            className="assistant-compose"
+            className="taxo-compose"
             onSubmit={(event) => {
               event.preventDefault();
               if (!query.trim()) return;
@@ -988,38 +1367,37 @@ function Assistant({
               setQuery("");
             }}
           >
-            <label className="sr-only" htmlFor="assistant-question">
-              Ask a question about this screen
+            <label className="sr-only" htmlFor="taxo-question">
+              Ask TaxO a question about this screen
             </label>
             <input
-              id="assistant-question"
+              id="taxo-question"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Ask if you’re stuck…"
+              placeholder={copy.placeholder}
               autoComplete="off"
             />
-            <button type="submit" aria-label="Send question">
-              Send
+            <button type="submit" aria-label="Send question to TaxO">
+              {copy.send}
             </button>
           </form>
-          {question && (
-            <div className="assistant-question">You: {question}</div>
-          )}
-          {answer && (
-            <div className="assistant-answer" role="status">
-              {answer}
-            </div>
-          )}
         </aside>
       )}
       <button
-        className="assistant-trigger"
+        className="taxo-trigger"
         onClick={onToggle}
-        aria-label={open ? "Close TaxPath Assistant" : "Open TaxPath Assistant"}
+        aria-label={open ? "Close TaxO" : "Open TaxO tax assistant"}
         aria-expanded={open}
       >
-        <span>✦</span>
-        <strong>Ask TaxPath</strong>
+        <span className="taxo-orb" aria-hidden="true">
+          <i />
+          <i />
+          <b />
+        </span>
+        <span>
+          <strong>TaxO</strong>
+          <small>Tax guide</small>
+        </span>
       </button>
     </div>
   );
