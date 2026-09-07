@@ -74,6 +74,25 @@ type TaxOLanguageOption = {
   send: string;
 };
 
+type TaxOChatCopy = {
+  intro: string;
+  processing: string;
+  understoodOld: string;
+  understoodNew: string;
+  npsQuestion: string;
+  reviewing: string;
+  done: string;
+  useForm16: string;
+  explainProcess: string;
+  explainSavings: string;
+  next: string;
+  processingLabel: string;
+  you: string;
+  yes: string;
+  no: string;
+  unsure: string;
+};
+
 const scenarios: Record<ScenarioId, Scenario> = {
   priya: {
     id: "priya",
@@ -109,6 +128,45 @@ const scenarios: Record<ScenarioId, Scenario> = {
     note: "A gentle prompt to review interest reported by a bank.",
   },
 };
+
+const profileIllustrations: Record<ScenarioId, { mark: string; detail: string }> = {
+  priya: { mark: "✦", detail: "Opportunity and mismatch" },
+  arjun: { mark: "✓", detail: "Clean salaried check" },
+  meera: { mark: "⌁", detail: "Bank-interest review" },
+};
+
+const tourSlides = [
+  {
+    icon: "◉",
+    eyebrow: "START WITH A PROFILE",
+    title: "Choose the demo that matches the story you want to explore.",
+    copy: "The profile menu switches between Priya’s mismatch, Arjun’s clean salaried check, and Meera’s bank-interest review. Each uses safe synthetic information.",
+  },
+  {
+    icon: "O",
+    eyebrow: "REGIME SWITCH",
+    title: "Use O or N to compare the relevant tax path.",
+    copy: "The Regime button switches between Old and New. TaxPath keeps the selected path visible and changes the deductions and next questions it can show in this demo.",
+  },
+  {
+    icon: "⇄",
+    eyebrow: "CHOOSE YOUR WAY",
+    title: "Let TaxO guide you, or review it yourself.",
+    copy: "TaxO-led check turns the synthetic Form 16 into a short conversation. Manual review lets you pick documents and move through each check at your own pace.",
+  },
+  {
+    icon: "▤",
+    eyebrow: "UNDERSTAND BEFORE DECIDING",
+    title: "Documents become clear checks, not a filing form.",
+    copy: "TaxPath explains what the sample Form 16 shows, compares information such as TDS, and asks only follow-ups that may matter to the selected demo.",
+  },
+  {
+    icon: "✓",
+    eyebrow: "READINESS, EXPLAINED",
+    title: "The final screen tells you what to review next.",
+    copy: "A ready state means the synthetic checks are complete. “Don’t file yet” identifies the specific item to verify first—TaxPath never files or submits anything.",
+  },
+];
 
 const taxPaidHistory: Record<ScenarioId, TaxHistoryEntry[]> = {
   priya: [
@@ -277,6 +335,17 @@ const taxoLanguages: Record<TaxOLanguage, TaxOLanguageOption> = {
   },
 };
 
+const taxoChatCopy: Record<TaxOLanguage, TaxOChatCopy> = {
+  en: { intro: "Hi, I’m TaxO. I’ll prepare this synthetic return from a Form 16, then show you each check before anything is decided.", processing: "I’m reading the synthetic Form 16: salary, employer TDS and financial year.", understoodOld: "Form 16 understood. I found salary income and TDS. One quick check may affect your old-regime benefit.", understoodNew: "Form 16 understood. I found salary income and TDS. One quick check may affect your regime comparison.", npsQuestion: "Do you contribute to NPS?", reviewing: "Thanks. I’m preparing your review with that answer.", done: "Process done. I prepared the same review checks for you below. Please review them before making any filing decision.", useForm16: "Use synthetic Form 16", explainProcess: "Explain the process", explainSavings: "Explain savings checks", next: "What should I do next?", processingLabel: "Processing Form 16", you: "You", yes: "Yes", no: "No", unsure: "I’m not sure" },
+  hi: { intro: "नमस्ते, मैं TaxO हूँ। मैं इस सिंथेटिक Form 16 से तैयारी करूँगा, फिर किसी निर्णय से पहले हर जांच दिखाऊँगा।", processing: "मैं सिंथेटिक Form 16 पढ़ रहा हूँ: वेतन, नियोक्ता TDS और वित्तीय वर्ष।", understoodOld: "Form 16 समझ लिया गया। वेतन आय और TDS मिले। एक जांच पुराने टैक्स-रेजीम के लाभ को प्रभावित कर सकती है।", understoodNew: "Form 16 समझ लिया गया। वेतन आय और TDS मिले। एक जांच टैक्स-रेजीम की तुलना को प्रभावित कर सकती है।", npsQuestion: "क्या आप NPS में योगदान करते हैं?", reviewing: "धन्यवाद। मैं उस उत्तर के साथ आपकी समीक्षा तैयार कर रहा हूँ।", done: "प्रक्रिया पूरी हुई। नीचे समीक्षा जांच तैयार है। फाइलिंग का निर्णय लेने से पहले इन्हें देखें।", useForm16: "सिंथेटिक Form 16 चुनें", explainProcess: "प्रक्रिया समझाएँ", explainSavings: "बचत जांच समझाएँ", next: "मुझे आगे क्या करना चाहिए?", processingLabel: "Form 16 प्रोसेस हो रहा है", you: "आप", yes: "हाँ", no: "नहीं", unsure: "मुझे पक्का नहीं है" },
+  bn: { intro: "হ্যালো, আমি TaxO। এই সিন্থেটিক Form 16 থেকে প্রস্তুতি নেব, তারপর সিদ্ধান্তের আগে প্রতিটি পরীক্ষা দেখাব।", processing: "আমি সিন্থেটিক Form 16 পড়ছি: বেতন, নিয়োগকর্তার TDS এবং আর্থিক বছর।", understoodOld: "Form 16 বোঝা গেছে। বেতন আয় ও TDS পাওয়া গেছে। একটি পরীক্ষা পুরনো রেজিমের সুবিধাকে প্রভাবিত করতে পারে।", understoodNew: "Form 16 বোঝা গেছে। বেতন আয় ও TDS পাওয়া গেছে। একটি পরীক্ষা রেজিম তুলনাকে প্রভাবিত করতে পারে।", npsQuestion: "আপনি কি NPS-এ অবদান রাখেন?", reviewing: "ধন্যবাদ। ওই উত্তরের ভিত্তিতে আপনার রিভিউ তৈরি করছি।", done: "প্রক্রিয়া সম্পন্ন। নিচে রিভিউ পরীক্ষাগুলি তৈরি করেছি। ফাইল করার সিদ্ধান্তের আগে দেখুন।", useForm16: "সিন্থেটিক Form 16 ব্যবহার করুন", explainProcess: "প্রক্রিয়াটি ব্যাখ্যা করুন", explainSavings: "সাশ্রয় পরীক্ষা ব্যাখ্যা করুন", next: "আমার পরের পদক্ষেপ কী?", processingLabel: "Form 16 প্রক্রিয়াকরণ হচ্ছে", you: "আপনি", yes: "হ্যাঁ", no: "না", unsure: "আমি নিশ্চিত নই" },
+  ta: { intro: "வணக்கம், நான் TaxO. இந்த செயற்கை Form 16-இலிருந்து தயாரிப்பேன்; முடிவெடுக்கும் முன் ஒவ்வொரு சோதனையையும் காண்பிப்பேன்.", processing: "செயற்கை Form 16-ஐப் படிக்கிறேன்: சம்பளம், நிறுவனர் TDS மற்றும் நிதியாண்டு.", understoodOld: "Form 16 புரிந்துகொள்ளப்பட்டது. சம்பள வருமானம் மற்றும் TDS கிடைத்தது. ஒரு சோதனை பழைய ரெஜிம் பலனை பாதிக்கலாம்.", understoodNew: "Form 16 புரிந்துகொள்ளப்பட்டது. சம்பள வருமானம் மற்றும் TDS கிடைத்தது. ஒரு சோதனை ரெஜிம் ஒப்பீட்டை பாதிக்கலாம்.", npsQuestion: "நீங்கள் NPS-க்கு பங்களிக்கிறீர்களா?", reviewing: "நன்றி. அந்த பதிலுடன் உங்கள் மதிப்பாய்வைத் தயாரிக்கிறேன்.", done: "செயல்முறை முடிந்தது. கீழே மதிப்பாய்வு சோதனைகளைத் தயாரித்துள்ளேன். தாக்கல் முடிவுக்கு முன் பாருங்கள்.", useForm16: "செயற்கை Form 16 பயன்படுத்துக", explainProcess: "செயல்முறையை விளக்குக", explainSavings: "சேமிப்பு சோதனைகளை விளக்குக", next: "அடுத்து நான் என்ன செய்ய வேண்டும்?", processingLabel: "Form 16 செயலாக்கப்படுகிறது", you: "நீங்கள்", yes: "ஆம்", no: "இல்லை", unsure: "எனக்குத் தெரியவில்லை" },
+  te: { intro: "హలో, నేను TaxO. ఈ సింథటిక్ Form 16 నుంచి సిద్ధం చేస్తాను; నిర్ణయం ముందు ప్రతి తనిఖీని చూపుతాను.", processing: "సింథటిక్ Form 16 చదువుతున్నాను: జీతం, యజమాని TDS మరియు ఆర్థిక సంవత్సరం.", understoodOld: "Form 16 అర్థమైంది. జీత ఆదాయం, TDS గుర్తించాను. ఒక తనిఖీ పాత రీజిమ్ ప్రయోజనాన్ని ప్రభావితం చేయవచ్చు.", understoodNew: "Form 16 అర్థమైంది. జీత ఆదాయం, TDS గుర్తించాను. ఒక తనిఖీ రీజిమ్ పోలికను ప్రభావితం చేయవచ్చు.", npsQuestion: "మీరు NPS కు చెల్లిస్తున్నారా?", reviewing: "ధన్యవాదాలు. ఆ సమాధానంతో మీ సమీక్షను సిద్ధం చేస్తున్నాను.", done: "ప్రక్రియ పూర్తయింది. దిగువ సమీక్ష తనిఖీలను సిద్ధం చేశాను. ఫైలింగ్ నిర్ణయం ముందు చూడండి.", useForm16: "సింథటిక్ Form 16 ఉపయోగించండి", explainProcess: "ప్రక్రియను వివరించండి", explainSavings: "పొదుపు తనిఖీలను వివరించండి", next: "నేను తరువాత ఏమి చేయాలి?", processingLabel: "Form 16 ప్రాసెస్ అవుతోంది", you: "మీరు", yes: "అవును", no: "కాదు", unsure: "నాకు ఖచ్చితంగా తెలియదు" },
+  mr: { intro: "नमस्कार, मी TaxO आहे. या सिंथेटिक Form 16 वरून तयारी करेन आणि निर्णयापूर्वी प्रत्येक तपासणी दाखवेन.", processing: "मी सिंथेटिक Form 16 वाचत आहे: पगार, नियोक्ता TDS आणि आर्थिक वर्ष.", understoodOld: "Form 16 समजला. पगाराचे उत्पन्न आणि TDS सापडले. एक तपासणी जुन्या रेजीमच्या फायद्यावर परिणाम करू शकते.", understoodNew: "Form 16 समजला. पगाराचे उत्पन्न आणि TDS सापडले. एक तपासणी रेजीम तुलनेवर परिणाम करू शकते.", npsQuestion: "तुम्ही NPS मध्ये योगदान देता का?", reviewing: "धन्यवाद. त्या उत्तरासह तुमचे पुनरावलोकन तयार करीत आहे.", done: "प्रक्रिया पूर्ण झाली. खाली पुनरावलोकन तपासण्या तयार केल्या आहेत. फाइलिंगचा निर्णय घेण्यापूर्वी पाहा.", useForm16: "सिंथेटिक Form 16 वापरा", explainProcess: "प्रक्रिया समजावून सांगा", explainSavings: "बचत तपासण्या समजावून सांगा", next: "मी पुढे काय करावे?", processingLabel: "Form 16 प्रक्रिया सुरू आहे", you: "तुम्ही", yes: "होय", no: "नाही", unsure: "मला खात्री नाही" },
+  kn: { intro: "ನಮಸ್ಕಾರ, ನಾನು TaxO. ಈ ಸಿಂಥೆಟಿಕ್ Form 16 ನಿಂದ ತಯಾರಿ ಮಾಡಿ, ನಿರ್ಧಾರಕ್ಕೂ ಮುನ್ನ ಪ್ರತಿ ಪರಿಶೀಲನೆಯನ್ನು ತೋರಿಸುತ್ತೇನೆ.", processing: "ಸಿಂಥೆಟಿಕ್ Form 16 ಓದುತ್ತಿದ್ದೇನೆ: ವೇತನ, ಉದ್ಯೋಗದಾತ TDS ಮತ್ತು ಹಣಕಾಸು ವರ್ಷ.", understoodOld: "Form 16 ಅರ್ಥವಾಯಿತು. ವೇತನ ಆದಾಯ ಮತ್ತು TDS ಸಿಕ್ಕಿವೆ. ಒಂದು ಪರಿಶೀಲನೆ ಹಳೆಯ ರೆಜೀಮ್ ಲಾಭದ ಮೇಲೆ ಪರಿಣಾಮ ಬೀರಬಹುದು.", understoodNew: "Form 16 ಅರ್ಥವಾಯಿತು. ವೇತನ ಆದಾಯ ಮತ್ತು TDS ಸಿಕ್ಕಿವೆ. ಒಂದು ಪರಿಶೀಲನೆ ರೆಜೀಮ್ ಹೋಲಿಕೆಯ ಮೇಲೆ ಪರಿಣಾಮ ಬೀರಬಹುದು.", npsQuestion: "ನೀವು NPS ಗೆ ಕೊಡುಗೆ ನೀಡುತ್ತೀರಾ?", reviewing: "ಧನ್ಯವಾದಗಳು. ಆ ಉತ್ತರದೊಂದಿಗೆ ನಿಮ್ಮ ಪರಿಶೀಲನೆಯನ್ನು ತಯಾರಿಸುತ್ತಿದ್ದೇನೆ.", done: "ಪ್ರಕ್ರಿಯೆ ಪೂರ್ಣಗೊಂಡಿದೆ. ಕೆಳಗೆ ಪರಿಶೀಲನಾ ಅಂಶಗಳನ್ನು ತಯಾರಿಸಿದ್ದೇನೆ. ಫೈಲಿಂಗ್ ನಿರ್ಧಾರಕ್ಕೂ ಮುನ್ನ ನೋಡಿ.", useForm16: "ಸಿಂಥೆಟಿಕ್ Form 16 ಬಳಸಿ", explainProcess: "ಪ್ರಕ್ರಿಯೆ ವಿವರಿಸಿ", explainSavings: "ಉಳಿತಾಯ ಪರಿಶೀಲನೆ ವಿವರಿಸಿ", next: "ನಾನು ಮುಂದೆ ಏನು ಮಾಡಬೇಕು?", processingLabel: "Form 16 ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿದೆ", you: "ನೀವು", yes: "ಹೌದು", no: "ಇಲ್ಲ", unsure: "ನನಗೆ ಖಚಿತವಿಲ್ಲ" },
+  ml: { intro: "ഹലോ, ഞാൻ TaxO. ഈ സിന്തറ്റിക് Form 16-ൽ നിന്ന് തയ്യാറാക്കി, തീരുമാനത്തിന് മുമ്പ് ഓരോ പരിശോധനയും കാണിക്കും.", processing: "സിന്തറ്റിക് Form 16 വായിക്കുകയാണ്: ശമ്പളം, തൊഴിലുടമയുടെ TDS, സാമ്പത്തിക വർഷം.", understoodOld: "Form 16 മനസ്സിലാക്കി. ശമ്പള വരുമാനവും TDS-ഉം കണ്ടെത്തി. ഒരു പരിശോധന പഴയ റജീം ആനുകൂല്യത്തെ ബാധിക്കാം.", understoodNew: "Form 16 മനസ്സിലാക്കി. ശമ്പള വരുമാനവും TDS-ഉം കണ്ടെത്തി. ഒരു പരിശോധന റജീം താരതമ്യത്തെ ബാധിക്കാം.", npsQuestion: "നിങ്ങൾ NPS-ലേക്ക് സംഭാവന ചെയ്യുന്നുണ്ടോ?", reviewing: "നന്ദി. ആ മറുപടിയോടെ നിങ്ങളുടെ അവലോകനം തയ്യാറാക്കുന്നു.", done: "പ്രക്രിയ പൂർത്തിയായി. താഴെ അവലോകന പരിശോധനകൾ തയ്യാറാക്കി. ഫയലിംഗ് തീരുമാനത്തിന് മുമ്പ് പരിശോധിക്കുക.", useForm16: "സിന്തറ്റിക് Form 16 ഉപയോഗിക്കുക", explainProcess: "പ്രക്രിയ വിശദീകരിക്കുക", explainSavings: "സേവിംഗ് പരിശോധന വിശദീകരിക്കുക", next: "ഞാൻ അടുത്തതായി എന്ത് ചെയ്യണം?", processingLabel: "Form 16 പ്രോസസ്സ് ചെയ്യുന്നു", you: "നിങ്ങൾ", yes: "അതെ", no: "ഇല്ല", unsure: "എനിക്ക് ഉറപ്പില്ല" },
+};
+
 const stages: Record<Stage, number> = {
   home: 0,
   documents: 1,
@@ -297,6 +366,7 @@ function Icon({ children }: { children: string }) {
 function App() {
   const [stage, setStage] = useState<Stage>("home");
   const [scenarioId, setScenarioId] = useState<ScenarioId>("priya");
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [regime, setRegime] = useState<TaxRegime>("old");
   const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem("taxpath-theme") as Theme) || "light",
@@ -507,7 +577,7 @@ function App() {
     setTourStep(-1);
   }
   function nextTourStep() {
-    if (tourStep >= 3) {
+    if (tourStep >= tourSlides.length - 1) {
       closeTour();
       return;
     }
@@ -529,34 +599,70 @@ function App() {
           <span>taxpath</span>
         </button>
         <div className="top-actions">
-          <label className="scenario-select">
-            <span className="sr-only">Demo scenario</span>
-            <select
-              value={scenarioId}
-              onChange={(event) =>
-                selectScenario(event.target.value as ScenarioId)
-              }
+          <div className="demo-profile-picker">
+            <button
+              type="button"
+              className="demo-profile-trigger"
+              aria-label={`Demo profile: ${scenario.firstName}`}
+              aria-haspopup="listbox"
+              aria-expanded={profileMenuOpen}
+              aria-controls="demo-profile-options"
+              onClick={() => setProfileMenuOpen(!profileMenuOpen)}
             >
-              {Object.values(scenarios).map((item) => (
-                <option key={item.id} value={item.id}>
-                  Demo: {item.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="regime-select">
-            <span className="sr-only">Tax regime</span>
-            <select
-              value={regime}
-              onChange={(event) => {
-                setRegime(event.target.value as TaxRegime);
-                setSelectedSavingCheck(null);
-              }}
-            >
-              <option value="new">New regime</option>
-              <option value="old">Old regime</option>
-            </select>
-          </label>
+              <span className={"demo-profile-avatar " + scenario.id} aria-hidden="true">
+                <b>{scenario.firstName.slice(0, 1)}</b>
+                <i>{profileIllustrations[scenario.id].mark}</i>
+              </span>
+              <span className="demo-profile-trigger-copy">
+                <strong>{scenario.firstName}</strong>
+                <small>Demo profile</small>
+              </span>
+              <span className="demo-profile-chevron" aria-hidden="true">⌄</span>
+            </button>
+            {profileMenuOpen && (
+              <div id="demo-profile-options" className="demo-profile-menu" role="listbox" aria-label="Demo profiles">
+                {Object.values(scenarios).map((item) => {
+                  const illustration = profileIllustrations[item.id];
+                  const isSelected = scenarioId === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className={"demo-profile-option " + (isSelected ? "selected" : "")}
+                      role="option"
+                      aria-selected={isSelected}
+                      onClick={() => {
+                        selectScenario(item.id);
+                        setProfileMenuOpen(false);
+                      }}
+                    >
+                      <span className={"demo-profile-avatar " + item.id} aria-hidden="true">
+                        <b>{item.firstName.slice(0, 1)}</b>
+                        <i>{illustration.mark}</i>
+                      </span>
+                      <span className="demo-profile-copy">
+                        <strong>{item.firstName}</strong>
+                        <small>{item.label}</small>
+                      </span>
+                      {isSelected && <span className="demo-profile-current" aria-hidden="true">✓</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <button
+            className="regime-toggle"
+            onClick={() => {
+              setRegime(isOldRegime ? "new" : "old");
+              setSelectedSavingCheck(null);
+            }}
+            aria-label={`Switch to ${isOldRegime ? "New" : "Old"} regime`}
+            title={`Switch to ${isOldRegime ? "New" : "Old"} regime`}
+          >
+            <span aria-hidden="true">{isOldRegime ? "O" : "N"}</span>
+            <small>{isOldRegime ? "Old" : "New"}</small>
+          </button>
           <label className="theme-select">
             <span className="sr-only">Colour theme</span>
             <select
@@ -568,6 +674,15 @@ function App() {
               <option value="system">System</option>
             </select>
           </label>
+          <button
+            className="theme-toggle"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+            title={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+          >
+            <span aria-hidden="true">{theme === "dark" ? "☾" : "☀"}</span>
+            <small>{theme === "dark" ? "Dark" : "Light"}</small>
+          </button>
           <span className="demo-pill">Demo mode</span>
         </div>
         <div className="profile-actions">
@@ -1221,6 +1336,7 @@ function TaxO({
   const [query, setQuery] = useState("");
   const [showPrompts, setShowPrompts] = useState(false);
   const copy = taxoLanguages[language];
+  const chat = taxoChatCopy[language];
   const prompts = [
     "Why is my tax this high?",
     "Can I save tax?",
@@ -1278,58 +1394,56 @@ function TaxO({
             {journeyMode === "automated" && (
               <>
                 <div className="taxo-bubble">
-                  Hi, I’m TaxO. I’ll prepare this synthetic return from a Form
-                  16, then show you each check before anything is decided.
+                  {chat.intro}
                 </div>
                 {automationStep === "choose-document" && (
                   <div className="taxo-replies">
-                    <button onClick={onStartForm16}>Use synthetic Form 16</button>
-                    <button onClick={() => onPrompt("Explain TaxO process")}>Explain the process</button>
+                    <button onClick={onStartForm16}>{chat.useForm16}</button>
+                    <button onClick={() => onPrompt("Explain TaxO process")}>{chat.explainProcess}</button>
                   </div>
                 )}
                 {automationStep !== "choose-document" && (
                   <>
                     <div className="taxo-bubble">
                       {automationStep === "processing"
-                        ? "I’m reading the synthetic Form 16: salary, employer TDS and financial year."
-                        : <>Form 16 understood. I found salary income and TDS. One quick check may affect your {isOldRegime ? "old-regime benefit" : "regime comparison"}.</>}
+                        ? chat.processing
+                        : isOldRegime ? chat.understoodOld : chat.understoodNew}
                     </div>
                     {automationStep === "processing" && (
                       <div className="taxo-processing">
-                        <span className="loading-dot" aria-hidden="true" /> Processing Form 16
+                        <span className="loading-dot" aria-hidden="true" /> {chat.processingLabel}
                       </div>
                     )}
                   </>
                 )}
                 {(automationStep === "reviewing" || automationStep === "complete") && npsAnswer && (
                   <div className="taxo-question">
-                    You: {npsAnswer === "unsure" ? "I’m not sure" : npsAnswer === "yes" ? "Yes" : "No"}
+                    {chat.you}: {npsAnswer === "unsure" ? chat.unsure : npsAnswer === "yes" ? chat.yes : chat.no}
                   </div>
                 )}
                 {automationStep === "nps-question" && (
                   <>
                     <div className="taxo-bubble taxo-question-bubble">
-                      Do you contribute to NPS?
+                      {chat.npsQuestion}
                     </div>
                     <div className="taxo-replies">
-                      <button onClick={() => onAnswerAutomation("yes")}>Yes</button>
-                      <button onClick={() => onAnswerAutomation("no")}>No</button>
-                      <button onClick={() => onAnswerAutomation("unsure")}>I’m not sure</button>
+                      <button onClick={() => onAnswerAutomation("yes")}>{chat.yes}</button>
+                      <button onClick={() => onAnswerAutomation("no")}>{chat.no}</button>
+                      <button onClick={() => onAnswerAutomation("unsure")}>{chat.unsure}</button>
                     </div>
                   </>
                 )}
                 {automationStep === "reviewing" && (
-                  <div className="taxo-bubble">Thanks. I’m preparing your review with that answer.</div>
+                  <div className="taxo-bubble">{chat.reviewing}</div>
                 )}
                 {automationStep === "complete" && (
                   <>
                     <div className="taxo-bubble">
-                      Process done. I prepared the same review checks for you
-                      below. Please review them before making any filing decision.
+                      {chat.done}
                     </div>
                     <div className="taxo-replies">
-                      <button onClick={() => onPrompt("Can I save tax?")}>Explain savings checks</button>
-                      <button onClick={() => onPrompt("What should I do next?")}>What should I do next?</button>
+                      <button onClick={() => onPrompt("Can I save tax?")}>{chat.explainSavings}</button>
+                      <button onClick={() => onPrompt("What should I do next?")}>{chat.next}</button>
                     </div>
                   </>
                 )}
@@ -1411,29 +1525,7 @@ function Tour({
   onNext: () => void;
   onClose: () => void;
 }) {
-  const slides = [
-    {
-      eyebrow: "WELCOME TO TAXPATH",
-      title: "Your tax check starts before filing.",
-      copy: "TaxPath is a synthetic, independent prototype that helps you understand your information, find things worth checking, and know what to do next.",
-    },
-    {
-      eyebrow: "START WITH WHAT YOU HAVE",
-      title: "Pick a document, not a tax form.",
-      copy: "Choose a safe demo document. TaxPath explains what it understood, then asks only questions that could change your situation.",
-    },
-    {
-      eyebrow: "YOUR PERSONAL GUIDE",
-      title: "Ask why, at any point.",
-      copy: "Use the floating TaxPath Assistant for a clear explanation of the current screen, a number, or the next best action.",
-    },
-    {
-      eyebrow: "THE FINAL CHECK",
-      title: "Readiness can mean: don’t file yet.",
-      copy: "The check list shows what is verified and what needs attention. Review the highlighted item before you move on.",
-    },
-  ];
-  const slide = slides[step];
+  const slide = tourSlides[step];
   return (
     <div className="tour-backdrop" role="presentation">
       <section
@@ -1450,22 +1542,22 @@ function Tour({
           ×
         </button>
         <div className="tour-progress">
-          {slides.map((_, index) => (
+          {tourSlides.map((_, index) => (
             <span className={index <= step ? "active" : ""} key={index} />
           ))}
         </div>
-        <div className="tour-icon">
-          {step === 0 ? "✦" : step === 1 ? "▤" : step === 2 ? "◌" : "✓"}
+        <div className="tour-slide" key={slide.title}>
+          <div className="tour-icon">{slide.icon}</div>
+          <div className="step-label">{slide.eyebrow}</div>
+          <h2 id="tour-title">{slide.title}</h2>
+          <p>{slide.copy}</p>
         </div>
-        <div className="step-label">{slide.eyebrow}</div>
-        <h2 id="tour-title">{slide.title}</h2>
-        <p>{slide.copy}</p>
         <div className="tour-actions">
           <button className="tour-skip" onClick={onClose}>
             Skip for now
           </button>
           <button className="button primary" onClick={onNext}>
-            {step === slides.length - 1 ? "Start exploring" : "Next"}{" "}
+            {step === tourSlides.length - 1 ? "Start exploring" : "Next"}{" "}
             <span>→</span>
           </button>
         </div>
